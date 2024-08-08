@@ -1,9 +1,12 @@
 package org.unifacisa;
 
-//TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
-// click the <icon src="AllIcons.Actions.Execute"/> icon in the gutter.
+import org.unifacisa.controllers.MenuPrincipalController;
+
 public class Main {
     public static void main(String[] args) {
 
+        MenuPrincipalController menuPrincipalController = new MenuPrincipalController();
+
+        menuPrincipalController.exibirMenuPrincipal();
     }
 }

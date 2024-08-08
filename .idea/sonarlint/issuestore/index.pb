@@ -25,7 +25,11 @@ e
 5src/main/java/org/unifacisa/view/MenuTarefasView.java,a\0\a05f92731f30b179e529661358f96a37f24d7dae
 f
 6src/main/java/org/unifacisa/view/MenuProjetosView.java,0\a\0aa394c4c7f2fba02c535eb970a9cafb56172ed3
-{
-Ksrc/main/java/org/unifacisa/commons/constantes/ConstantesMenuPrincipal.java,f\7\f79207f58df4bcf0d4c03e371cff2a61e07f8ab7
 Å
 Qsrc/main/java/org/unifacisa/hibernate_connection/EntityManagerFactoryService.java,f\9\f9d2466123873301c9fb870df29778d94a2bcfd4
+Ñ
+Tsrc/main/java/org/unifacisa/commons/constantes/ConstantesMenuProjetosController.java,d\3\d3eac0db59ec810779e3a7905596f43dde1cf83a
+É
+Ssrc/main/java/org/unifacisa/commons/constantes/ConstantesMenuTarefasController.java,d\1\d13c1af2d52001ec224ff051b7110712f9247fc6
+Ö
+Usrc/main/java/org/unifacisa/commons/constantes/ConstantesMenuPrincipalController.java,9\2\921904242115f857f44ac32c0fc09d3360ce1298

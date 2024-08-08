@@ -1,18 +1,18 @@
 package org.unifacisa.controllers;
 
 
-import org.unifacisa.commons.constantes.ConstantesMenuPrincipal;
+import org.unifacisa.commons.constantes.ConstantesMenuPrincipalController;
 import org.unifacisa.hibernate_connection.EntityManagerFactoryService;
 
 import javax.swing.*;
 
 public class MenuPrincipalController {
 
-    private EntityManagerFactoryService entityManagerFactoryService = new EntityManagerFactoryService();
-
+    private final EntityManagerFactoryService entityManagerFactoryService = new EntityManagerFactoryService();
+    private final MenuProjetosController menuProjetosController;
 
     public MenuPrincipalController() {
-
+        this.menuProjetosController = new MenuProjetosController();
     }
 
 
@@ -28,11 +28,11 @@ public class MenuPrincipalController {
 
             switch (opcaoMenuPrincipal) {
 
-                case ConstantesMenuPrincipal.GERENCIADOR_PROJETOS:
-
+                case ConstantesMenuPrincipalController.GERENCIADOR_PROJETOS:
+                    menuProjetosController.MenuGerenciadorProjetos();
                     break;
 
-                case ConstantesMenuPrincipal.GERENCIADOR_TAREFAS:
+                case ConstantesMenuPrincipalController.GERENCIADOR_TAREFAS:
 
                     break;
 
@@ -41,7 +41,7 @@ public class MenuPrincipalController {
                     break;
 
             }
-        } while (opcaoMenuPrincipal != ConstantesMenuPrincipal.SAIR);
+        } while (opcaoMenuPrincipal != ConstantesMenuPrincipalController.SAIR);
 
     }
 }

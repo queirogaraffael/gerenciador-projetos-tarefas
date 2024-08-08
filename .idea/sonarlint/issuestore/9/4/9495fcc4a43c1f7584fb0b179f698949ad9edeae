@@ -1,3 +1,6 @@
 
-Š
-java:S2094"BRemove this empty class, write its code or make it an "interface".(Éù´üÿÿÿÿ8ÊÜˆ˜“2J$2938f146-1a4a-48c5-89ec-5ff89cfbfb42
+Ä
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(•ıÏß8µèÚš“2J$92c0249d-94a8-4e0e-ba43-346ed596282e
+	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ƒŸŸ8µèÚš“2J$c339fbf8-5b6c-43bb-a43a-1055c506a03a
+
+java:S3923"[Remove this conditional structure or edit its code blocks so that they're not all the same.(ÑşŞ¨8µèÚš“2J$1a8c6e0c-af06-4ea6-8d35-cef16976fc17

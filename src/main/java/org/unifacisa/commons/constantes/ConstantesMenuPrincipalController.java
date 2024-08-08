@@ -1,6 +1,6 @@
 package org.unifacisa.commons.constantes;
 
-public class ConstantesMenuPrincipal {
+public class ConstantesMenuPrincipalController {
 
     public static final int GERENCIADOR_PROJETOS = 0;
     public static final int GERENCIADOR_TAREFAS = 1;

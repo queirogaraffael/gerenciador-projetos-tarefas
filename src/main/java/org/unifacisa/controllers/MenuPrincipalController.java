@@ -3,45 +3,47 @@ package org.unifacisa.controllers;
 
 import org.unifacisa.commons.constantes.ConstantesMenuPrincipalController;
 import org.unifacisa.hibernate_connection.EntityManagerFactoryService;
+import org.unifacisa.model.dao.DaoFactory;
 
 import javax.swing.*;
 
 public class MenuPrincipalController {
 
     private final EntityManagerFactoryService entityManagerFactoryService = new EntityManagerFactoryService();
-    private final MenuProjetosController menuProjetosController;
+    private final MenuProjetosController menuProjetosController = new MenuProjetosController();
 
     public MenuPrincipalController() {
-        this.menuProjetosController = new MenuProjetosController();
+        entityManagerFactoryService.inicializarEntityManagerFactory();
     }
 
 
     public void exibirMenuPrincipal() {
-        entityManagerFactoryService.inicializarEntityManagerFactory();
 
         int opcaoMenuPrincipal;
         Object[] opcoes = {"Gerenciador de Projetos", "Gerenciador de Tarefas", "Encerrar programa"};
 
+        try {
+            do {
+                opcaoMenuPrincipal = JOptionPane.showOptionDialog(null, "Escolha uma opção:", "Menu Principal", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
 
-        do {
-            opcaoMenuPrincipal = JOptionPane.showOptionDialog(null, "Escolha uma opção:", "Menu Principal", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opcoes, opcoes[0]);
+                switch (opcaoMenuPrincipal) {
 
-            switch (opcaoMenuPrincipal) {
+                    case ConstantesMenuPrincipalController.GERENCIADOR_PROJETOS:
+                        menuProjetosController.MenuGerenciadorProjetos();
+                        break;
 
-                case ConstantesMenuPrincipalController.GERENCIADOR_PROJETOS:
-                    menuProjetosController.MenuGerenciadorProjetos();
-                    break;
+                    case ConstantesMenuPrincipalController.GERENCIADOR_TAREFAS:
+                        break;
 
-                case ConstantesMenuPrincipalController.GERENCIADOR_TAREFAS:
+                    default:
+                        break;
 
-                    break;
+                }
+            } while (opcaoMenuPrincipal != ConstantesMenuPrincipalController.SAIR);
+        } finally {
+            entityManagerFactoryService.fechaEntityManagerFactory();
+        }
 
-                default:
-                    entityManagerFactoryService.fechaEntityManagerFactory();
-                    break;
-
-            }
-        } while (opcaoMenuPrincipal != ConstantesMenuPrincipalController.SAIR);
 
     }
 }

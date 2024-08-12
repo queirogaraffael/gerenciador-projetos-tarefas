@@ -2,7 +2,7 @@ package org.unifacisa.view;
 
 import javax.swing.JOptionPane;
 
-public class MenuProjetosView {
+public class MenuProjetosControllerView {
 
     private static final String MENU_TITLE = "Fluxo De Caixa";
     private static final String MENU_PROMPT = "Escolha uma opção";

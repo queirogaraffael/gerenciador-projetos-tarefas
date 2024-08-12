@@ -1,7 +1,7 @@
 package org.unifacisa.controllers;
 
 import org.unifacisa.commons.constantes.ConstantesMenuProjetosController;
-import org.unifacisa.view.MenuProjetosView;
+import org.unifacisa.view.MenuProjetosControllerView;
 
 public class MenuProjetosController {
 
@@ -13,7 +13,7 @@ public class MenuProjetosController {
         String opcaoMenuGerenciadoProjetos;
 
         do {
-                opcaoMenuGerenciadoProjetos = MenuProjetosView.exibirMenuProjetosView();
+                opcaoMenuGerenciadoProjetos = MenuProjetosControllerView.exibirMenuProjetosView();
 
                 switch (opcaoMenuGerenciadoProjetos) {
 

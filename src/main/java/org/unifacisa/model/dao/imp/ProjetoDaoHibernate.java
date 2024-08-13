@@ -17,6 +17,7 @@ public class ProjetoDaoHibernate implements ProjetoDao {
         this.entityManagerFactory = entityManagerFactory;
     }
 
+
     @Override
     public void criaProjeto(Projeto projeto) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -34,6 +35,9 @@ public class ProjetoDaoHibernate implements ProjetoDao {
             GlobalExceptionHandler.handlePersistenceException(error);
 
         } catch (Exception error) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
             GlobalExceptionHandler.handleGeneralException(error);
 
         } finally {
@@ -41,6 +45,7 @@ public class ProjetoDaoHibernate implements ProjetoDao {
         }
 
     }
+
 
     @Override
     public Projeto getProjetoById(Long idProjeto) {
@@ -59,6 +64,7 @@ public class ProjetoDaoHibernate implements ProjetoDao {
             entityManager.close();
         }
     }
+
 
     @Override
     public List<ProjetoDTO> getProjetosDTO() {
@@ -93,6 +99,7 @@ public class ProjetoDaoHibernate implements ProjetoDao {
         }
 
     }
+
 
     @Override
     public void atualizaProjetoById(Projeto projetoModificado) {

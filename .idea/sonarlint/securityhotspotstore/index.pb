@@ -47,3 +47,5 @@ f
 6src/main/java/org/unifacisa/model/DTOs/ProjetoDTO.java,8\0\80f0779b592c777ecb574df0d8ecc896f52e1e70
 r
 Bsrc/main/java/org/unifacisa/exceptions/GlobalExceptionHandler.java,f\6\f65dc9e85a013822db0bac3ad76640dfddd4d570
+e
+5src/main/java/org/unifacisa/model/DTOs/TarefaDTO.java,f\4\f42887be63da7d24b843798ef07563c2cc36f882

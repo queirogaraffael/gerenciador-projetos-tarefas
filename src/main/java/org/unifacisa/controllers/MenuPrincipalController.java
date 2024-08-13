@@ -3,7 +3,6 @@ package org.unifacisa.controllers;
 
 import org.unifacisa.commons.constantes.ConstantesMenuPrincipalController;
 import org.unifacisa.hibernate_connection.EntityManagerFactoryService;
-import org.unifacisa.model.dao.DaoFactory;
 
 import javax.swing.*;
 

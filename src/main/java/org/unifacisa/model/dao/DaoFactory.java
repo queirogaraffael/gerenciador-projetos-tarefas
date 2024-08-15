@@ -14,10 +14,6 @@ public class DaoFactory {
         this.entityManagerFactory = entityManagerFactory;
     }
 
-    public ProjetoDao createProjetoDao() {
-        return new ProjetoDaoHibernate(entityManagerFactory);
-    }
-
     public TarefaSimplesDao createTarefaSimplesDao() {
         return new TarefaSimplesDaoHibernate(entityManagerFactory);
     }

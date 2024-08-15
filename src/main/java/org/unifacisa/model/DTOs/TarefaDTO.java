@@ -27,4 +27,9 @@ public class TarefaDTO {
     public void setTitulo(String titulo) {
         this.titulo = titulo;
     }
+
+    @Override
+    public String toString() {
+        return id + " - " + titulo;
+    }
 }

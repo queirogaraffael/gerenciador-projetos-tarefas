@@ -65,6 +65,24 @@ public class ProjetoDaoHibernate implements ProjetoDao {
         }
     }
 
+    @Override
+    public boolean verificaSeHaProjetoComMesmoTitulo(String titulo) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        try {
+            entityManager.createQuery("SELECT projeto FROM Projeto projeto WHERE LOWER(projeto.titulo) = LOWER(:titulo)", Projeto.class)
+                    .setParameter("titulo", titulo.trim())
+                    .getSingleResult();
+
+            return true;
+
+        } catch (Exception error) {
+            return false;
+        } finally {
+            entityManager.close();
+        }
+    }
+
 
     @Override
     public List<ProjetoDTO> getProjetosDTO() {
@@ -89,10 +107,10 @@ public class ProjetoDaoHibernate implements ProjetoDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            return entityManager.createQuery("SELECT new org.unifacisa.model.DTOs.ProjetoDTO(projeto.id, projeto.titulo) FROM Projeto projeto WHERE LOWER(projeto.titulo) LIKE LOWER(CONCAT('%', :titulo, '%')", ProjetoDTO.class).setParameter("titulo", titulo).getResultList();
+            return entityManager.createQuery("SELECT new org.unifacisa.model.DTOs.ProjetoDTO(projeto.id, projeto.titulo) FROM Projeto projeto WHERE LOWER(projeto.titulo) LIKE LOWER(CONCAT('%', :titulo, '%'))", ProjetoDTO.class).setParameter("titulo", titulo).getResultList();
 
         } catch (Exception error) {
-            GlobalExceptionHandler.handleGeneralException(error);
+            GlobalExceptionHandler.handleGeneralException("Sem projeto(s) com esse nome.");
             return Collections.emptyList();
         } finally {
             entityManager.close();
@@ -168,4 +186,6 @@ public class ProjetoDaoHibernate implements ProjetoDao {
         }
 
     }
+
+
 }

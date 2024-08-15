@@ -1,6 +1,7 @@
 
-Ä
-java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(•ıÏß8µèÚš“2J$dfbe6ccc-f01a-48fc-add0-c33db9016ce7
-	java:S100"NRename this method name to match the regular expression '^[a-z][a-zA-Z0-9]*$'.(ƒŸŸ8µèÚš“2J$87c6efa6-c7e5-487f-a169-4675a91407e1
-
-java:S3923"[Remove this conditional structure or edit its code blocks so that they're not all the same.(ÑşŞ¨8µèÚš“2J$68266020-f6ea-45eb-a453-677272e84bc1
+d
+java:S1192V"HDefine a constant instead of duplicating this literal "Sucesso" 3 times.(×€êX8Ï’µ•2
+€
+java:S1192^"cDefine a constant instead of duplicating this literal "Sem projeto(s). Adicione primeiro." 3 times.(âç“Ò8Ï’µ•2
+d
+java:S1192@"GDefine a constant instead of duplicating this literal "Alerta" 9 times.(¸—ûø8Ï’µ•2

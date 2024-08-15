@@ -49,3 +49,9 @@ r
 Bsrc/main/java/org/unifacisa/exceptions/GlobalExceptionHandler.java,f\6\f65dc9e85a013822db0bac3ad76640dfddd4d570
 e
 5src/main/java/org/unifacisa/model/DTOs/TarefaDTO.java,f\4\f42887be63da7d24b843798ef07563c2cc36f882
+p
+@src/main/java/org/unifacisa/view/MenuProjetosControllerView.java,e\f\efa705302bc8651bf8728b15faf0428b05e6c8d3
+o
+?src/main/java/org/unifacisa/view/MenuTarefasControllerView.java,a\0\a0fde5f0546a26aab422a8b62d942c0628d9407c
+k
+;src/main/java/org/unifacisa/commons/utils/SelecionaDTO.java,e\3\e363dde195503eb5d34a09dcd08a4f69c54096b9

@@ -8,6 +8,10 @@ import java.util.List;
 public interface ProjetoDao {
     void criaProjeto(Projeto projeto);
     Projeto getProjetoById(Long idProjeto);
+
+    boolean verificaSeHaProjetoComMesmoTitulo(String nome);
+
+
     List<ProjetoDTO> getProjetosDTO();
     List<ProjetoDTO> getProjetosDTOPorNome(String titulo);
     void atualizaProjetoById(Projeto projeto);

@@ -1,9 +1,6 @@
 package org.unifacisa.model.entities;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.HashSet;
@@ -29,5 +26,14 @@ public class Projeto {
 
     @OneToMany(mappedBy = "projeto")
     Set<TarefaComPrazo> tarefasComPrazo = new HashSet<>();
+
+    @Override
+    public String toString() {
+        return "Projeto: \n" +
+                "Título: " + titulo +
+                "\n Descrição: " + descricao +
+                "\n Em Aberto: " + (emAberto ? "Sim" : "Nao");
+    }
+
 
 }

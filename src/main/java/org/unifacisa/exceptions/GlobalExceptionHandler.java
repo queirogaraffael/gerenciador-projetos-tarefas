@@ -14,8 +14,16 @@ public class GlobalExceptionHandler {
         JOptionPane.showMessageDialog(null, "Ocorreu um erro: " + e.getMessage());
     }
 
+    public static void handleGeneralException(String msg) {
+        JOptionPane.showMessageDialog(null, msg);
+    }
+
     public static void handleNoResultException(NoResultException e){
         JOptionPane.showMessageDialog(null,"Sem resultado: " + e.getMessage());
+    }
+
+    public static void handleNoResultException(String msg){
+        JOptionPane.showMessageDialog(null, msg);
     }
 
     public static void handleIllegalArgumentException(String msg){
@@ -25,4 +33,6 @@ public class GlobalExceptionHandler {
     public static void handleRuntimeException(String msg){
         JOptionPane.showMessageDialog(null, msg);
     }
+
+
 }

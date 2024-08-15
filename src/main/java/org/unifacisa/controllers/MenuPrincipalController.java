@@ -9,7 +9,7 @@ import javax.swing.*;
 public class MenuPrincipalController {
 
     private final EntityManagerFactoryService entityManagerFactoryService = new EntityManagerFactoryService();
-    private final MenuProjetosController menuProjetosController = new MenuProjetosController();
+    private final MenuProjetosController menuProjetosController = new MenuProjetosController(entityManagerFactoryService.entityManagerFactory());
 
     public MenuPrincipalController() {
         entityManagerFactoryService.inicializarEntityManagerFactory();
@@ -28,7 +28,7 @@ public class MenuPrincipalController {
                 switch (opcaoMenuPrincipal) {
 
                     case ConstantesMenuPrincipalController.GERENCIADOR_PROJETOS:
-                        menuProjetosController.MenuGerenciadorProjetos();
+                        menuProjetosController.menuGerenciadorProjetos();
                         break;
 
                     case ConstantesMenuPrincipalController.GERENCIADOR_TAREFAS:

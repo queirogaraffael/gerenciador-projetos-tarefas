@@ -6,6 +6,9 @@ import javax.swing.JOptionPane;
 
 public class GlobalExceptionHandler {
 
+    private GlobalExceptionHandler() {
+    }
+
     public static void handlePersistenceException(PersistenceException e) {
         JOptionPane.showMessageDialog(null, "Erro de persistência: " + e.getMessage());
     }

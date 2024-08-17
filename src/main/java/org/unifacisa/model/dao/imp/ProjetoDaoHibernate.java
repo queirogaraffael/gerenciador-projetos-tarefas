@@ -1,9 +1,9 @@
 package org.unifacisa.model.dao.imp;
 
 import org.unifacisa.exceptions.GlobalExceptionHandler;
-import org.unifacisa.model.DTOs.ProjetoDTO;
+import org.unifacisa.DTOs.ProjetoDTO;
 import org.unifacisa.model.dao.ProjetoDao;
-import org.unifacisa.model.entities.Projeto;
+import org.unifacisa.model.domain.entities.Projeto;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -65,6 +65,7 @@ public class ProjetoDaoHibernate implements ProjetoDao {
         }
     }
 
+
     @Override
     public boolean verificaSeHaProjetoComMesmoTitulo(String titulo) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
@@ -90,7 +91,7 @@ public class ProjetoDaoHibernate implements ProjetoDao {
 
         try {
             return entityManager.createQuery(
-                    "SELECT new org.unifacisa.model.DTOs.ProjetoDTO(projeto.id, projeto.titulo) FROM Projeto projeto",
+                    "SELECT new org.unifacisa.DTOs.ProjetoDTO(projeto.id, projeto.titulo) FROM Projeto projeto",
                     ProjetoDTO.class).getResultList();
 
         } catch (Exception error) {
@@ -107,7 +108,7 @@ public class ProjetoDaoHibernate implements ProjetoDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            return entityManager.createQuery("SELECT new org.unifacisa.model.DTOs.ProjetoDTO(projeto.id, projeto.titulo) FROM Projeto projeto WHERE LOWER(projeto.titulo) LIKE LOWER(CONCAT('%', :titulo, '%'))", ProjetoDTO.class).setParameter("titulo", titulo).getResultList();
+            return entityManager.createQuery("SELECT new org.unifacisa.DTOs.ProjetoDTO(projeto.id, projeto.titulo) FROM Projeto projeto WHERE LOWER(projeto.titulo) LIKE LOWER(CONCAT('%', :titulo, '%'))", ProjetoDTO.class).setParameter("titulo", titulo).getResultList();
 
         } catch (Exception error) {
             GlobalExceptionHandler.handleGeneralException("Sem projeto(s) com esse nome.");

@@ -1,9 +1,9 @@
 package org.unifacisa.model.dao.imp;
 
+import org.unifacisa.DTOs.TarefaDTO;
 import org.unifacisa.exceptions.GlobalExceptionHandler;
-import org.unifacisa.model.DTOs.TarefaDTO;
 import org.unifacisa.model.dao.TarefaSimplesDao;
-import org.unifacisa.model.entities.TarefaSimples;
+import org.unifacisa.model.domain.entities.TarefaSimples;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -63,13 +63,41 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
     }
 
     @Override
-    public List<TarefaDTO> getTarefasDTO() {
+    public boolean verificaSeHaTarefaComMesmoTitulo(String titulo) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        try {
+            entityManager.createQuery("SELECT tarefa FROM TarefaSimples tarefa WHERE LOWER(tarefa.titulo) = LOWER(:titulo)", TarefaSimples.class)
+                    .setParameter("titulo", titulo.trim())
+                    .getSingleResult();
+
+            return true;
+
+        } catch (Exception error) {
+            return false;
+        } finally {
+            entityManager.close();
+        }
+
+
+
+
+
+    }
+
+    @Override
+    public List<TarefaDTO> getTarefasDTODeUmProjeto(Long idProjeto) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
             return entityManager.createQuery(
-                    "SELECT new org.unifacisa.model.DTOs.TarefaDTO(tarefa.id, tarefa.titulo) FROM TarefaSimples tarefa",
-                    TarefaDTO.class).getResultList();
+                            "SELECT new org.unifacisa.DTOs.TarefaDTO(tarefa.id, tarefa.titulo) " +
+                                    "FROM TarefaSimples tarefa " +
+                                    "WHERE tarefa.projeto.id = :idProjeto",
+                            TarefaDTO.class)
+                    .setParameter("idProjeto", idProjeto)
+                    .getResultList();
+
 
         } catch (Exception error) {
             GlobalExceptionHandler.handleGeneralException(error);
@@ -79,13 +107,15 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
         }
     }
 
+
+
     @Override
     public List<TarefaDTO> getTarefasDTOByPrioridade(int prioridade) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
             return entityManager.createQuery(
-                    "SELECT new org.unifacisa.model.DTOs.TarefaDTO(tarefa.id, tarefa.titulo) FROM TarefaSimples tarefa WHERE tarefa.prioridade =: prioridade",
+                    "SELECT new org.unifacisa.DTOs.TarefaDTO(tarefa.id, tarefa.titulo) FROM TarefaSimples tarefa WHERE tarefa.prioridade =: prioridade",
                     TarefaDTO.class).setParameter("prioridade", prioridade).getResultList();
 
         } catch (Exception error) {
@@ -96,14 +126,24 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
         }
     }
 
+
+
+
+
+
     @Override
-    public List<TarefaDTO> getTarefasDTOByStatus(boolean emAberto) {
+    public List<TarefaDTO> getTarefasDTOByStatus(boolean emAberto, Long idProjeto) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
             return entityManager.createQuery(
-                    "SELECT new org.unifacisa.model.DTOs.TarefaDTO(tarefa.id, tarefa.titulo) FROM TarefaSimples tarefa WHERE tarefa.emAberto =: emAberto",
-                    TarefaDTO.class).setParameter("emAberto", emAberto).getResultList();
+                            "SELECT new org.unifacisa.DTOs.TarefaDTO(tarefa.id, tarefa.titulo) " +
+                                    "FROM TarefaSimples tarefa " +
+                                    "WHERE tarefa.emAberto = :emAberto AND tarefa.projeto.id = :idProjeto",
+                            TarefaDTO.class)
+                    .setParameter("emAberto", emAberto)
+                    .setParameter("idProjeto", idProjeto)
+                    .getResultList();
 
         } catch (Exception error) {
             GlobalExceptionHandler.handleGeneralException(error);
@@ -113,10 +153,15 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
         }
     }
 
+
+
+
+
+
     @Override
     public void atualizaTarefa(TarefaSimples tarefaModifica) {
         if (tarefaModifica == null || tarefaModifica.getId() == null) {
-            GlobalExceptionHandler.handleIllegalArgumentException("Tarefa ou ID inválido.");
+            GlobalExceptionHandler.handleIllegalArgumentException("Tarefa ou ID invalido.");
             return;
         }
 
@@ -214,4 +259,6 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
             entityManager.close();
         }
     }
+
+
 }

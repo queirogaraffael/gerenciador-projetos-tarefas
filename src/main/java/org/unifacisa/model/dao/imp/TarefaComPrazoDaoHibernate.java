@@ -1,9 +1,9 @@
 package org.unifacisa.model.dao.imp;
 
+import org.unifacisa.DTOs.TarefaDTO;
 import org.unifacisa.exceptions.GlobalExceptionHandler;
-import org.unifacisa.model.DTOs.TarefaDTO;
 import org.unifacisa.model.dao.TarefaComPrazoDao;
-import org.unifacisa.model.entities.TarefaComPrazo;
+import org.unifacisa.model.domain.entities.TarefaComPrazo;
 
 import javax.persistence.*;
 import java.util.Collections;
@@ -64,15 +64,38 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
         }
     }
 
+    @Override
+    public boolean verificaSeHaTarefaComMesmoTitulo(String titulo) {
+        EntityManager entityManager = entityManagerFactory.createEntityManager();
+
+        try {
+            entityManager.createQuery("SELECT tarefa FROM TarefaComPrazo tarefa WHERE LOWER(tarefa.titulo) = LOWER(:titulo)", TarefaComPrazo.class)
+                    .setParameter("titulo", titulo.trim())
+                    .getSingleResult();
+
+            return true;
+
+        } catch (Exception error) {
+            return false;
+        } finally {
+            entityManager.close();
+        }
+
+    }
 
     @Override
-    public List<TarefaDTO> getTarefasDTO() {
+    public List<TarefaDTO> getTarefasDTODeUmProjeto(Long idProjeto) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
             return entityManager.createQuery(
-                    "SELECT new org.unifacisa.model.DTOs.TarefaDTO(tarefa.id, tarefa.titulo) FROM TarefaComPrazo tarefa",
-                    TarefaDTO.class).getResultList();
+                            "SELECT new org.unifacisa.DTOs.TarefaDTO(tarefa.id, tarefa.titulo) " +
+                                    "FROM TarefaComPrazo tarefa " +
+                                    "WHERE tarefa.projeto.id = :idProjeto",
+                            TarefaDTO.class)
+                    .setParameter("idProjeto", idProjeto)
+                    .getResultList();
+
 
         } catch (Exception error) {
             GlobalExceptionHandler.handleGeneralException(error);
@@ -89,7 +112,7 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
 
         try {
             return entityManager.createQuery(
-                    "SELECT new org.unifacisa.model.DTOs.TarefaDTO(tarefa.id, tarefa.titulo) FROM TarefaComPrazo tarefa WHERE tarefa.prioridade =: prioridade",
+                    "SELECT new org.unifacisa.DTOs.TarefaDTO(tarefa.id, tarefa.titulo) FROM TarefaComPrazo tarefa WHERE tarefa.prioridade =: prioridade",
                     TarefaDTO.class).setParameter("prioridade", prioridade).getResultList();
 
         } catch (Exception error) {
@@ -101,15 +124,22 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
     }
 
 
+
+
+
     @Override
-    public List<TarefaDTO> getTarefasDTOByStatus(boolean emAberto) {
+    public List<TarefaDTO> getTarefasDTOByStatus(boolean emAberto, Long idProjeto) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
             return entityManager.createQuery(
-                    "SELECT new org.unifacisa.model.DTOs.TarefaDTO(tarefa.id, tarefa.titulo) FROM TarefaComPrazo tarefa WHERE tarefa.emAberto =: emAberto",
-                    TarefaDTO.class).setParameter("emAberto", emAberto).getResultList();
-
+                            "SELECT new org.unifacisa.DTOs.TarefaDTO(tarefa.id, tarefa.titulo) " +
+                                    "FROM TarefaComPrazo tarefa " +
+                                    "WHERE tarefa.emAberto = :emAberto AND tarefa.projeto.id = :idProjeto",
+                            TarefaDTO.class)
+                    .setParameter("emAberto", emAberto)
+                    .setParameter("idProjeto", idProjeto)
+                    .getResultList();
         } catch (Exception error) {
             GlobalExceptionHandler.handleGeneralException(error);
             return Collections.emptyList();
@@ -117,6 +147,10 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
             entityManager.close();
         }
     }
+
+
+
+
 
 
     @Override
@@ -223,4 +257,5 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
             entityManager.close();
         }
     }
+
 }

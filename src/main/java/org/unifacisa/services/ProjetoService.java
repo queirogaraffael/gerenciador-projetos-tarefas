@@ -1,9 +1,9 @@
 package org.unifacisa.services;
 
-import org.unifacisa.model.DTOs.ProjetoDTO;
+import org.unifacisa.DTOs.ProjetoDTO;
 import org.unifacisa.model.dao.ProjetoDao;
 import org.unifacisa.model.dao.imp.ProjetoDaoHibernate;
-import org.unifacisa.model.entities.Projeto;
+import org.unifacisa.model.domain.entities.Projeto;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
@@ -39,7 +39,7 @@ public class ProjetoService {
         projetoDao.deletaProjetoById(idProjeto);
     }
 
-    public boolean verificaSeHaProjetoComMesmoTitulo(String titulo){
+    public boolean verificaSeHaProjetoComMesmoTitulo(String titulo) {
         return projetoDao.verificaSeHaProjetoComMesmoTitulo(titulo);
     }
 

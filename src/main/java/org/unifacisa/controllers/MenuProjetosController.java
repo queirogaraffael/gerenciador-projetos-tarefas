@@ -1,11 +1,11 @@
 package org.unifacisa.controllers;
 
 import org.unifacisa.commons.constantes.ConstantesMenuProjetosController;
-import org.unifacisa.commons.utils.SelecionaDTO;
-import org.unifacisa.model.DTOs.ProjetoDTO;
-import org.unifacisa.model.entities.Projeto;
+import org.unifacisa.commons.utils.SelecionaIdDTO;
+import org.unifacisa.DTOs.ProjetoDTO;
+import org.unifacisa.model.domain.entities.Projeto;
 import org.unifacisa.services.ProjetoService;
-import org.unifacisa.view.MenuProjetosControllerView;
+import org.unifacisa.view.ProjetosControllerView;
 
 import javax.persistence.EntityManagerFactory;
 import javax.swing.*;
@@ -23,7 +23,7 @@ public class MenuProjetosController {
         String opcaoMenuGerenciadoProjetos;
 
         do {
-            opcaoMenuGerenciadoProjetos = MenuProjetosControllerView.exibirMenuProjetosView();
+            opcaoMenuGerenciadoProjetos = ProjetosControllerView.exibirMenuProjetosView();
 
             switch (opcaoMenuGerenciadoProjetos) {
 
@@ -94,7 +94,7 @@ public class MenuProjetosController {
             JOptionPane.showMessageDialog(null, "Sem projeto(s). Adicione primeiro.", "Alerta"
                     , JOptionPane.ERROR_MESSAGE);
         } else {
-            Long id = SelecionaDTO.selecionaProjetoDTO(projetos);
+            Long id = SelecionaIdDTO.selecionaProjetoDTO(projetos);
             Projeto projeto = projetoService.getProjetoById(id);
             exibirOpcoesDeModificacaoProjetoEModifica(projeto);
         }
@@ -139,7 +139,7 @@ public class MenuProjetosController {
             JOptionPane.showMessageDialog(null, "Sem projeto(s). Adicione primeiro.", "Alerta"
                     , JOptionPane.ERROR_MESSAGE);
         } else {
-            Long id = SelecionaDTO.selecionaProjetoDTO(projetos);
+            Long id = SelecionaIdDTO.selecionaProjetoDTO(projetos);
             projetoService.deletarProjeto(id);
             JOptionPane.showMessageDialog(null, "Projeto removido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
         }
@@ -148,7 +148,7 @@ public class MenuProjetosController {
 
 
     public void selecionaEExibeProjeto(List<ProjetoDTO> projetos) {
-        Long id = SelecionaDTO.selecionaProjetoDTO(projetos);
+        Long id = SelecionaIdDTO.selecionaProjetoDTO(projetos);
         Projeto projeto = projetoService.getProjetoById(id);
         JOptionPane.showMessageDialog(null, projeto.toString(), "Projeto: ", JOptionPane.ERROR_MESSAGE);
     }

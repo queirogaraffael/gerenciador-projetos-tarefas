@@ -10,6 +10,8 @@ public class MenuPrincipalController {
 
     private final EntityManagerFactoryService entityManagerFactoryService = new EntityManagerFactoryService();
     private final MenuProjetosController menuProjetosController = new MenuProjetosController(entityManagerFactoryService.entityManagerFactory());
+    private final MenuTarefasController menuTarefasController = new MenuTarefasController(entityManagerFactoryService.entityManagerFactory());
+
 
     public MenuPrincipalController() {
         entityManagerFactoryService.inicializarEntityManagerFactory();
@@ -32,6 +34,7 @@ public class MenuPrincipalController {
                         break;
 
                     case ConstantesMenuPrincipalController.GERENCIADOR_TAREFAS:
+                        menuTarefasController.menuGerenciadorTarefas();
                         break;
 
                     default:

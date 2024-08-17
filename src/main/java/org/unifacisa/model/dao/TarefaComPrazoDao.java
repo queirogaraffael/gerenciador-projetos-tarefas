@@ -1,7 +1,7 @@
 package org.unifacisa.model.dao;
 
-import org.unifacisa.model.DTOs.TarefaDTO;
-import org.unifacisa.model.entities.TarefaComPrazo;
+import org.unifacisa.DTOs.TarefaDTO;
+import org.unifacisa.model.domain.entities.TarefaComPrazo;
 
 import java.util.List;
 
@@ -10,11 +10,13 @@ public interface TarefaComPrazoDao {
 
     TarefaComPrazo getTarefaById(Long id);
 
-    List<TarefaDTO> getTarefasDTO();
+    boolean verificaSeHaTarefaComMesmoTitulo(String titulo);
+
+    List<TarefaDTO> getTarefasDTODeUmProjeto(Long idProjeto);
 
     List<TarefaDTO> getTarefasDTOByPrioridade(int prioridade);
 
-    List<TarefaDTO> getTarefasDTOByStatus(boolean emAberto);
+    List<TarefaDTO> getTarefasDTOByStatus(boolean emAberto, Long idProjeto);
 
     void atualizaTarefa(TarefaComPrazo tarefa);
 

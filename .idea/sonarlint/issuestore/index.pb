@@ -61,3 +61,5 @@ t
 Dsrc/main/java/com/unifacisa/model/domain/entities/TarefaSimples.java,5\a\5abccb453c4f4866dc9ccbf71903f1e9a91600c8
 h
 8src/main/java/com/unifacisa/view/SelecionaDTOsViews.java,d\3\d3b297c9f18ec24ec8e69ebc7263b354c966dd18
+9
+	README.md,8\e\8ec9a00bfd09b3190ac6b22251dbb1aa95a0579d

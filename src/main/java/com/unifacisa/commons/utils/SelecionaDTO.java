@@ -5,13 +5,13 @@ import com.unifacisa.dtos.TarefaDTO;
 import com.unifacisa.exceptions.GlobalExceptionHandler;
 import com.unifacisa.view.SelecionaDTOsViews;
 
-import javax.swing.*;
 import java.util.List;
 
 public class SelecionaDTO {
 
     private SelecionaDTO() {
     }
+
 
     public static Long selecionaProjetoDTO(List<ProjetoDTO> projetos) {
         Object[] opcoes = converterProjetosParaArray(projetos);
@@ -50,6 +50,7 @@ public class SelecionaDTO {
                 .map(ProjetoDTO::toString)
                 .toArray(Object[]::new);
     }
+
 
     private static Object[] converterTarefasParaArray(List<TarefaDTO> tarefas) {
         return tarefas.stream()

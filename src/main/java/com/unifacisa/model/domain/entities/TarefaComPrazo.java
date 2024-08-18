@@ -25,10 +25,10 @@ public class TarefaComPrazo extends Tarefa{
     @Override
     public String toString() {
         return "Tarefa: \n" +
-                "Título: " + getTitulo() +
-                "\n Descrição: " + getDescricao() +
+                "Titulo: " + getTitulo() +
+                "\n Descricao: " + getDescricao() +
                 "\n Prazo: " + getPrazo().toString() +
-                "\n Em Aberto: " + (isEmAberto() ? "Sim" : "Nao");
+                "\n Em aberto: " + (isEmAberto() ? "Sim" : "Nao");
     }
 
 }

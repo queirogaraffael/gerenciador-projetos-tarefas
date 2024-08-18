@@ -2,12 +2,12 @@ package com.unifacisa.controllers;
 
 import com.unifacisa.commons.constantes.ConstantesMenuProjetosController;
 import com.unifacisa.commons.utils.SelecionaDTO;
-import com.unifacisa.services.TarefaComPrazoService;
-import com.unifacisa.services.TarefaSimplesService;
-import com.unifacisa.view.ProjetosViews;
 import com.unifacisa.dtos.ProjetoDTO;
 import com.unifacisa.model.domain.entities.Projeto;
 import com.unifacisa.services.ProjetoService;
+import com.unifacisa.services.TarefaComPrazoService;
+import com.unifacisa.services.TarefaSimplesService;
+import com.unifacisa.view.ProjetosViews;
 
 import javax.persistence.EntityManagerFactory;
 import java.util.List;
@@ -17,11 +17,13 @@ public class MenuProjetosController {
     private final ProjetoService projetoService;
     private final TarefaSimplesService tarefaSimplesService;
     private final TarefaComPrazoService tarefaComPrazoService;
+    private final ProjetosViews projetosViews;
 
     public MenuProjetosController(EntityManagerFactory entityManagerFactory) {
         this.projetoService = new ProjetoService(entityManagerFactory);
         this.tarefaSimplesService = new TarefaSimplesService(entityManagerFactory);
         this.tarefaComPrazoService = new TarefaComPrazoService(entityManagerFactory);
+        this.projetosViews = new ProjetosViews();
     }
 
 
@@ -29,7 +31,7 @@ public class MenuProjetosController {
         String opcaoMenuGerenciadoProjetos;
 
         do {
-            opcaoMenuGerenciadoProjetos = ProjetosViews.exibirMenuProjetosView();
+            opcaoMenuGerenciadoProjetos = projetosViews.exibirMenuProjetosView();
 
             switch (opcaoMenuGerenciadoProjetos) {
 
@@ -68,24 +70,24 @@ public class MenuProjetosController {
 
 
     public void criaProjeto() {
-        String titulo = ProjetosViews.leTituloProjeto();
+        String titulo = projetosViews.leTituloProjeto();
 
         if (titulo == null || titulo.trim().isEmpty()) {
-            ProjetosViews.exibirAlertaTituloNaoPodeSerVazio();
+            projetosViews.exibirAlertaTituloNaoPodeSerVazio();
             return;
         }
 
         boolean verificaSeNomeJaExiste = projetoService.verificaSeHaProjetoComMesmoTitulo(titulo.trim());
 
         if (verificaSeNomeJaExiste) {
-            ProjetosViews.exibirAlertaProjetoComMesmoTitulo();
+            projetosViews.exibirAlertaProjetoComMesmoTitulo();
             return;
         }
 
-        String descricao = ProjetosViews.leDescricaoProjeto();
+        String descricao = projetosViews.leDescricaoProjeto();
 
         if (descricao == null || descricao.trim().isEmpty()) {
-            ProjetosViews.exibirAlertaDescricaoNaoPodeSerVazia();
+            projetosViews.exibirAlertaDescricaoNaoPodeSerVazia();
             return;
         }
 
@@ -95,7 +97,7 @@ public class MenuProjetosController {
         novoProjeto.setEmAberto(true);
 
         projetoService.criarProjeto(novoProjeto);
-        ProjetosViews.exibirAlertaProjetoFoiCriadoComSucesso();
+        projetosViews.exibirAlertaProjetoFoiCriadoComSucesso();
 
     }
 
@@ -103,7 +105,7 @@ public class MenuProjetosController {
         List<ProjetoDTO> projetos = projetoService.buscaProjetosDTO();
 
         if (projetos.isEmpty()) {
-            ProjetosViews.exibirAlertaSemProjeto();
+            projetosViews.exibirAlertaSemProjeto();
             return;
         }
         Long id = SelecionaDTO.selecionaProjetoDTO(projetos);
@@ -117,7 +119,7 @@ public class MenuProjetosController {
         List<ProjetoDTO> projetos = projetoService.buscaProjetosDTO();
 
         if (projetos.isEmpty()) {
-            ProjetosViews.exibirAlertaSemProjeto();
+            projetosViews.exibirAlertaSemProjeto();
             return;
         }
 
@@ -126,11 +128,11 @@ public class MenuProjetosController {
     }
 
     public void visualizaProjetosPorNome() {
-        String nome = ProjetosViews.leTituloProjeto();
+        String nome = projetosViews.leTituloProjeto();
         List<ProjetoDTO> projetos = projetoService.buscaProjetosDTOPorNome(nome);
 
         if (projetos.isEmpty()) {
-            ProjetosViews.exibirAlertaSemProjetosCorrespondentes();
+            projetosViews.exibirAlertaSemProjetosCorrespondentes();
             return;
         }
 
@@ -143,14 +145,14 @@ public class MenuProjetosController {
 
 
         if (projetos.isEmpty()) {
-            ProjetosViews.exibirAlertaSemProjeto();
+            projetosViews.exibirAlertaSemProjeto();
 
             return;
         }
 
         Long id = SelecionaDTO.selecionaProjetoDTO(projetos);
         projetoService.deletarProjeto(id);
-        ProjetosViews.exibirAlertaProjetoRemovidoComSucesso();
+        projetosViews.exibirAlertaProjetoRemovidoComSucesso();
 
     }
 
@@ -158,7 +160,7 @@ public class MenuProjetosController {
         List<ProjetoDTO> projetos = projetoService.buscaProjetosDTO();
 
         if (projetos.isEmpty()) {
-            ProjetosViews.exibirAlertaSemProjeto();
+            projetosViews.exibirAlertaSemProjeto();
             return;
         }
 
@@ -167,7 +169,7 @@ public class MenuProjetosController {
         tarefaSimplesService.executaTarefasPorProjeto(idProjeto);
         tarefaComPrazoService.executaTarefasPorProjeto(idProjeto);
 
-        ProjetosViews.exibirAlertaProjetoExecutadoComSucesso();
+        projetosViews.exibirAlertaProjetoExecutadoComSucesso();
 
     }
 
@@ -175,27 +177,27 @@ public class MenuProjetosController {
     public void selecionaEExibeProjeto(List<ProjetoDTO> projetos) {
         Long id = SelecionaDTO.selecionaProjetoDTO(projetos);
         Projeto projeto = projetoService.getProjetoById(id);
-        ProjetosViews.exibeDadosProjetos(projeto);
+        projetosViews.exibeDadosProjetos(projeto);
     }
 
     public void exibirOpcoesDeModificacaoProjetoEModifica(Projeto projeto) {
         int opcao;
 
         do {
-            opcao = ProjetosViews.selecionaOpcaoDeModificacaoProjeto();
+            opcao = projetosViews.selecionaOpcaoDeModificacaoProjeto();
 
             switch (opcao) {
                 case 0:
-                    ProjetosViews.atualizarTitulo(projeto);
+                    projetosViews.atualizarTitulo(projeto);
                     break;
 
                 case 1:
-                    ProjetosViews.atualizarDescricao(projeto);
+                    projetosViews.atualizarDescricao(projeto);
                     break;
 
                 case 2:
-                    ProjetosViews.atualizarTitulo(projeto);
-                    ProjetosViews.atualizarDescricao(projeto);
+                    projetosViews.atualizarTitulo(projeto);
+                    projetosViews.atualizarDescricao(projeto);
                     break;
 
                 default:
@@ -204,7 +206,7 @@ public class MenuProjetosController {
 
             if (opcao != 3) {
                 projetoService.atualizarProjeto(projeto);
-                ProjetosViews.exibirAlertaProjetoModificadoComSucesso();
+                projetosViews.exibirAlertaProjetoModificadoComSucesso();
             }
 
 

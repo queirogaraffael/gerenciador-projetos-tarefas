@@ -6,7 +6,10 @@ import com.unifacisa.commons.utils.SelecionaDTO;
 import com.unifacisa.dtos.ProjetoDTO;
 import com.unifacisa.dtos.TarefaDTO;
 import com.unifacisa.enums.Prioridade;
-import com.unifacisa.model.domain.entities.*;
+import com.unifacisa.model.domain.entities.Projeto;
+import com.unifacisa.model.domain.entities.Tarefa;
+import com.unifacisa.model.domain.entities.TarefaComPrazo;
+import com.unifacisa.model.domain.entities.TarefaSimples;
 import com.unifacisa.services.ProjetoService;
 import com.unifacisa.services.TarefaComPrazoService;
 import com.unifacisa.services.TarefaSimplesService;
@@ -21,18 +24,24 @@ public class MenuTarefasController {
     private final ProjetoService projetoService;
     private final TarefaComPrazoService tarefaComPrazoService;
     private final TarefaSimplesService tarefaSimplesService;
+    private final TarefasViews tarefasViews;
+    private final ProjetosViews projetosViews;
 
     public MenuTarefasController(EntityManagerFactory entityManagerFactory) {
         this.projetoService = new ProjetoService(entityManagerFactory);
         this.tarefaComPrazoService = new TarefaComPrazoService(entityManagerFactory);
         this.tarefaSimplesService = new TarefaSimplesService(entityManagerFactory);
+
+        this.tarefasViews = new TarefasViews();
+        this.projetosViews = new ProjetosViews();
+
     }
 
     public void menuGerenciadorTarefas() {
         String opcaoMenuGerenciadoTarefas;
 
         do {
-            opcaoMenuGerenciadoTarefas = TarefasViews.exibirMenuTarefasView();
+            opcaoMenuGerenciadoTarefas = tarefasViews.exibirMenuTarefasView();
 
             switch (opcaoMenuGerenciadoTarefas) {
 
@@ -85,39 +94,39 @@ public class MenuTarefasController {
         Projeto projeto = projetoService.getProjetoById(id);
 
 
-        String titulo = TarefasViews.leTituloTarefa();
+        String titulo = tarefasViews.leTituloTarefa();
 
 
         if (tarefaComPrazoService.verificaSeHaTarefaComMesmoTitulo(titulo) || tarefaSimplesService.verificaSeHaTarefaComMesmoTitulo(titulo)) {
-            TarefasViews.exibirAlertaQueNaoPodeTarefaComNomeDuplicadoEmUmProjeto();
+            tarefasViews.exibirAlertaQueNaoPodeTarefaComNomeDuplicadoEmUmProjeto();
             return;
         }
 
 
         if (titulo == null || titulo.trim().isEmpty()) {
-            TarefasViews.exibirAlertaTituloTarefaNaoPodeSerVazio();
+            tarefasViews.exibirAlertaTituloTarefaNaoPodeSerVazio();
             return;
         }
 
 
-        String descricao = TarefasViews.leDescricaoTarefa();
+        String descricao = tarefasViews.leDescricaoTarefa();
 
         if (descricao == null || descricao.trim().isEmpty()) {
-            TarefasViews.exibirAlertaDescricaoTarefaNaoPoderSerVazia();
+            tarefasViews.exibirAlertaDescricaoTarefaNaoPoderSerVazia();
             return;
         }
 
 
-        Prioridade prioridade = TarefasViews.selecionarPrioridade();
+        Prioridade prioridade = tarefasViews.selecionarPrioridade();
 
-        if (TarefasViews.desejaAdicionarData()) {
-            String dataString = TarefasViews.obterDataValida();
+        if (tarefasViews.desejaAdicionarData()) {
+            String dataString = tarefasViews.obterDataValida();
             tarefaComPrazoService.criaTarefaComPrazoESalva(titulo, descricao, projeto, prioridade, dataString);
         } else {
             tarefaSimplesService.criaTarefaSimplesESalva(titulo, descricao, projeto, prioridade);
         }
 
-        TarefasViews.exibirAlertaTarefaCriadaComSucesso();
+        tarefasViews.exibirAlertaTarefaCriadaComSucesso();
     }
 
 
@@ -128,12 +137,12 @@ public class MenuTarefasController {
             return;
         }
 
-        int tipoTarefa = TarefasViews.exibeViewEscolhaTipoTarefa();
+        int tipoTarefa = tarefasViews.exibeViewEscolhaTipoTarefa();
 
         List<TarefaDTO> tarefas = retornaTarefasDTODeUmProjetoPeloTipo(tipoTarefa, idProjeto);
 
         if (tarefas == null) {
-            TarefasViews.exibirAlertaSemTarefasDoTipoNoProjeto();
+            tarefasViews.exibirAlertaSemTarefasDoTipoNoProjeto();
             return;
         }
 
@@ -157,7 +166,7 @@ public class MenuTarefasController {
         }
 
 
-        int tipoTarefa = TarefasViews.exibeViewEscolhaTipoTarefa();
+        int tipoTarefa = tarefasViews.exibeViewEscolhaTipoTarefa();
 
         if (tipoTarefa == 0) {
             List<TarefaDTO> tarefasSimples = tarefaSimplesService.buscaTarefasDTODeUmProjeto(idProjeto);
@@ -178,10 +187,10 @@ public class MenuTarefasController {
             return;
         }
 
-        int tipoTarefa = TarefasViews.exibeViewEscolhaTipoTarefa();
+        int tipoTarefa = tarefasViews.exibeViewEscolhaTipoTarefa();
 
 
-        Prioridade tipoPrioridade = TarefasViews.selecionarPrioridade();
+        Prioridade tipoPrioridade = tarefasViews.selecionarPrioridade();
 
 
         if (tipoTarefa == 0) {
@@ -209,9 +218,9 @@ public class MenuTarefasController {
         }
 
 
-        int tipoTarefa = TarefasViews.exibeViewEscolhaTipoTarefa();
+        int tipoTarefa = tarefasViews.exibeViewEscolhaTipoTarefa();
 
-        boolean tipoStatus = TarefasViews.exibeViewEscolhaStatusTarefa();
+        boolean tipoStatus = tarefasViews.exibeViewEscolhaStatusTarefa();
 
         List<TarefaDTO> tarefas = retornaTarefasDTOPorStatusDeUmProjetoPeloTipo(tipoTarefa, idProjeto, tipoStatus);
 
@@ -233,12 +242,12 @@ public class MenuTarefasController {
             return;
         }
 
-        int tipoTarefa = TarefasViews.exibeViewEscolhaTipoTarefa();
+        int tipoTarefa = tarefasViews.exibeViewEscolhaTipoTarefa();
 
         List<TarefaDTO> tarefas = retornaTarefasDTODeUmProjetoPeloTipo(tipoTarefa, idProjeto);
 
         if (tarefas == null || tarefas.isEmpty()) {
-            TarefasViews.exibirAlertaSemTarefasDoTipoNoProjeto();
+            tarefasViews.exibirAlertaSemTarefasDoTipoNoProjeto();
             return;
         }
 
@@ -250,7 +259,7 @@ public class MenuTarefasController {
             tarefaComPrazoService.deletarTarefa(idTarefa);
         }
 
-        TarefasViews.exibirAlertaTarefaDeletadaComSucesso();
+        tarefasViews.exibirAlertaTarefaDeletadaComSucesso();
     }
 
 
@@ -263,14 +272,14 @@ public class MenuTarefasController {
             return;
         }
 
-        int tipoTarefa = TarefasViews.exibeViewEscolhaTipoTarefa();
+        int tipoTarefa = tarefasViews.exibeViewEscolhaTipoTarefa();
 
 
         List<TarefaDTO> tarefas = retornaTarefasDTOPorStatusDeUmProjetoPeloTipo(tipoTarefa, idProjeto, true);
 
 
         if (tarefas == null || tarefas.isEmpty()) {
-            TarefasViews.exibirAlertaSemTarefasDoTipoNoProjeto();
+            tarefasViews.exibirAlertaSemTarefasDoTipoNoProjeto();
             return;
         }
 
@@ -282,7 +291,7 @@ public class MenuTarefasController {
             tarefaComPrazoService.executaTarefa(idTarefa);
         }
 
-        TarefasViews.exibirAlertaTarefaExecutadaComSucesso();
+        tarefasViews.exibirAlertaTarefaExecutadaComSucesso();
     }
 
 
@@ -299,52 +308,52 @@ public class MenuTarefasController {
     private void visualizarTarefaSimples(List<TarefaDTO> tarefasSimples) {
 
         if (tarefasSimples == null || tarefasSimples.isEmpty()) {
-            TarefasViews.exibirAlertaSemTarefasSimples();
+            tarefasViews.exibirAlertaSemTarefasSimples();
             return;
         }
 
         Long idTarefa = SelecionaDTO.selecionaTarefaDTO(tarefasSimples);
         TarefaSimples tarefa = tarefaSimplesService.getTarefaById(idTarefa);
 
-        TarefasViews.exibeTarefa(tarefa);
+        tarefasViews.exibeTarefa(tarefa);
     }
 
     private void visualizarTarefaComPrazo(List<TarefaDTO> tarefasComPrazo) {
 
         if (tarefasComPrazo == null || tarefasComPrazo.isEmpty()) {
-            TarefasViews.exibirAlertaSemTarefasComPrazo();
+            tarefasViews.exibirAlertaSemTarefasComPrazo();
             return;
         }
 
         Long idTarefa = SelecionaDTO.selecionaTarefaDTO(tarefasComPrazo);
         TarefaComPrazo tarefa = tarefaComPrazoService.getTarefaById(idTarefa);
-        TarefasViews.exibeTarefa(tarefa);
+        tarefasViews.exibeTarefa(tarefa);
     }
 
 
     private <T extends Tarefa> void exibiOpcoesDeModificacaoTarefa(T tarefa) {
-        Object[] opcoes = TarefasViews.obterOpcoesDeModificacao(tarefa);
+        Object[] opcoes = tarefasViews.obterOpcoesDeModificacao(tarefa);
 
         int opcao;
 
         do {
-            opcao = TarefasViews.exibirEscolhaModificacao(opcoes);
+            opcao = tarefasViews.exibirEscolhaModificacao(opcoes);
 
             switch (opcao) {
                 case 0:
-                    TarefasViews.atualizarTitulo(tarefa);
+                    tarefasViews.atualizarTitulo(tarefa);
                     break;
 
                 case 1:
-                    TarefasViews.atualizarDescricao(tarefa);
+                    tarefasViews.atualizarDescricao(tarefa);
                     break;
 
                 case 2:
-                    TarefasViews.atualizarStatus(tarefa);
+                    tarefasViews.atualizarStatus(tarefa);
                     break;
 
                 case 3:
-                    TarefasViews.atualizaPrioridade(tarefa);
+                    tarefasViews.atualizaPrioridade(tarefa);
                     break;
 
                 case 4:
@@ -370,7 +379,7 @@ public class MenuTarefasController {
             if (opcao != opcoes.length - 1) {
                 atualizarTarefaNoBancoDeDados(tarefa);
 
-                TarefasViews.exibirAlertaTarefaModificadaComSucesso();
+                tarefasViews.exibirAlertaTarefaModificadaComSucesso();
             }
 
         } while (opcao != opcoes.length - 1);
@@ -378,10 +387,10 @@ public class MenuTarefasController {
 
 
     private <T extends Tarefa> void atualizarTudo(T tarefa) {
-        TarefasViews.atualizarTitulo(tarefa);
-        TarefasViews.atualizarDescricao(tarefa);
-        TarefasViews.atualizarStatus(tarefa);
-        TarefasViews.atualizaPrioridade(tarefa);
+        tarefasViews.atualizarTitulo(tarefa);
+        tarefasViews.atualizarDescricao(tarefa);
+        tarefasViews.atualizarStatus(tarefa);
+        tarefasViews.atualizaPrioridade(tarefa);
 
         if (tarefa instanceof TarefaComPrazo tarefaComPrazo) {
             atualizaData(tarefaComPrazo);
@@ -400,7 +409,7 @@ public class MenuTarefasController {
 
 
     private void atualizaData(TarefaComPrazo tarefaComPrazo) {
-        String dataString = TarefasViews.obterDataValida();
+        String dataString = tarefasViews.obterDataValida();
         tarefaComPrazo.setPrazo(ManipulaData.retornaLocalDate(dataString));
 
     }
@@ -419,7 +428,7 @@ public class MenuTarefasController {
         List<ProjetoDTO> projetos = projetoService.buscaProjetosDTO();
 
         if (projetos.isEmpty()) {
-            ProjetosViews.exibirAlertaSemProjeto();
+            projetosViews.exibirAlertaSemProjeto();
             return null;
         }
 

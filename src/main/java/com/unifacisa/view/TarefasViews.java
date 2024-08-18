@@ -1,7 +1,6 @@
 package com.unifacisa.view;
 
 import com.unifacisa.commons.utils.ManipulaData;
-import com.unifacisa.exceptions.GlobalExceptionHandler;
 import com.unifacisa.enums.Prioridade;
 import com.unifacisa.model.domain.entities.Tarefa;
 import com.unifacisa.model.domain.entities.TarefaSimples;
@@ -10,13 +9,19 @@ import javax.swing.*;
 
 public class TarefasViews {
 
-    private TarefasViews() {
+    private static final String MENU_TITLE = "Gerenciador de Tarefas";
+    private static final String MENU_PROMPT = "Escolha uma opção: ";
+    private static final Object[] PRIORIDADE_OPTIONS = {"Baixa", "Média", "Alta"};
+    private static final Object[] STATUS_OPTIONS = {"Em aberto", "Concluída"};
+    private static final Object[] MODIFICACAO_OPCOES_SIMPLIFICADA = {"Título", "Descrição", "Status", "Prioridade", "Todos", "Voltar"};
+    private static final Object[] MODIFICACAO_OPCOES_COMPLETA = {"Título", "Descrição", "Status", "Prioridade", "Data", "Todos", "Voltar"};
+
+
+    public TarefasViews() {
+
     }
 
-    private static final String MENU_TITLE = "Gerenciador de Tarefas";
-    private static final String MENU_PROMPT = "Escolha uma opcao: ";
-
-    private static final Object[] MENU_OPTIONS = {
+    public final Object[] menuOptions = {
             "Criar Tarefa em um Projeto",
             "Atualizar Tarefa de um Projeto",
             "Visualizar Tarefa(s) de um Projeto",
@@ -27,27 +32,21 @@ public class TarefasViews {
             "Voltar"
     };
 
-    private static final Object[] PRIORIDADE_OPTIONS = {"Baixa", "Media", "Alta"};
-    private static final Object[] STATUS_OPTIONS = {"Em aberto", "Concluida"};
-    private static final Object[] MODIFICACAO_OPCOES_SIMPLIFICADA = {"Titulo", "Descricao", "Status", "Prioridade", "Todos", "Voltar"};
-    private static final Object[] MODIFICACAO_OPCOES_COMPLETA = {"Titulo", "Descricao", "Status", "Prioridade", "Data", "Todos", "Voltar"};
-
-
-    public static String exibirMenuTarefasView() {
+    public String exibirMenuTarefasView() {
         Object opcaoSelecionada = JOptionPane.showInputDialog(
                 null,
                 MENU_PROMPT,
                 MENU_TITLE,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
-                MENU_OPTIONS,
-                MENU_OPTIONS[0]
+                menuOptions,
+                menuOptions[0]
         );
 
         return opcaoSelecionada.toString();
     }
 
-    public static Prioridade selecionarPrioridade() {
+    public Prioridade selecionarPrioridade() {
         int opcaoPrioridade = JOptionPane.showOptionDialog(
                 null,
                 "Escolha uma prioridade para a tarefa:",
@@ -62,26 +61,7 @@ public class TarefasViews {
     }
 
 
-    public static String exibirTarefasDTOsView(Object[] options) {
-        Object opcaoSelecionada = JOptionPane.showInputDialog(
-                null,
-                "Escolha uma tarefa: ",
-                "Tarefas",
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options,
-                options[0]
-        );
-
-        if (opcaoSelecionada != null) {
-            return opcaoSelecionada.toString();
-        } else {
-            GlobalExceptionHandler.handleGeneralException("Nenhuma opcao foi selecionada.");
-            return null;
-        }
-    }
-
-    public static int exibeViewEscolhaTipoTarefa() {
+    public int exibeViewEscolhaTipoTarefa() {
         Object[] opcoes = {"Tarefa simples", "Tarefa com prazo"};
         return JOptionPane.showOptionDialog(
                 null,
@@ -96,7 +76,7 @@ public class TarefasViews {
     }
 
 
-    public static boolean exibeViewEscolhaStatusTarefa() {
+    public boolean exibeViewEscolhaStatusTarefa() {
         int resultado = JOptionPane.showOptionDialog(
                 null,
                 "Escolha o status da tarefa:",
@@ -111,7 +91,7 @@ public class TarefasViews {
     }
 
 
-    public static int exibirEscolhaModificacao(Object[] opcoes) {
+    public int exibirEscolhaModificacao(Object[] opcoes) {
         return JOptionPane.showOptionDialog(
                 null,
                 "Escolha uma opção:",
@@ -125,14 +105,13 @@ public class TarefasViews {
     }
 
 
-
-    public static boolean desejaAdicionarData() {
+    public boolean desejaAdicionarData() {
         int resposta = JOptionPane.showConfirmDialog(null, "Deseja adicionar data à tarefa?", "Alerta", JOptionPane.YES_NO_OPTION);
         return resposta == JOptionPane.YES_OPTION;
     }
 
 
-    public static String obterDataValida() {
+    public String obterDataValida() {
         String dataString = JOptionPane.showInputDialog("Digite uma data no formato " + ManipulaData.FORMATO_DATA);
         while (!ManipulaData.verificaFormatoDataEstaCorreto(dataString)) {
             dataString = JOptionPane.showInputDialog("Digite uma data válida no formato " + ManipulaData.FORMATO_DATA);
@@ -141,7 +120,7 @@ public class TarefasViews {
     }
 
 
-    public static Object[] obterOpcoesDeModificacao(Tarefa tarefa) {
+    public Object[] obterOpcoesDeModificacao(Tarefa tarefa) {
         if (tarefa instanceof TarefaSimples) {
             return MODIFICACAO_OPCOES_SIMPLIFICADA;
         } else {
@@ -150,13 +129,13 @@ public class TarefasViews {
     }
 
 
-    public static <T extends Tarefa> void atualizaPrioridade(T tarefa) {
+    public <T extends Tarefa> void atualizaPrioridade(T tarefa) {
         Prioridade prioridade = selecionarPrioridade();
         tarefa.setPrioridade(prioridade);
     }
 
 
-    public static <T extends Tarefa> void atualizarStatus(T tarefa) {
+    public <T extends Tarefa> void atualizarStatus(T tarefa) {
         int opcaoStatus = JOptionPane.showOptionDialog(null, "Escolha o status:", "Modificar Status",
                 JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE,
                 null, STATUS_OPTIONS, STATUS_OPTIONS[0]);
@@ -168,7 +147,7 @@ public class TarefasViews {
         }
     }
 
-    public static <T extends Tarefa> void atualizarDescricao(T tarefa) {
+    public <T extends Tarefa> void atualizarDescricao(T tarefa) {
         String novaDescricao;
         while (true) {
             novaDescricao = JOptionPane.showInputDialog("Digite a nova descricao: ");
@@ -180,7 +159,7 @@ public class TarefasViews {
         }
     }
 
-    public static <T extends Tarefa> void atualizarTitulo(T tarefa) {
+    public <T extends Tarefa> void atualizarTitulo(T tarefa) {
         String novoTitulo;
         while (true) {
             novoTitulo = JOptionPane.showInputDialog("Digite o novo titulo: ");
@@ -192,70 +171,69 @@ public class TarefasViews {
         }
     }
 
-    public static void exibirAlertaSemTarefasSimples() {
+    public void exibirAlertaSemTarefasSimples() {
         JOptionPane.showMessageDialog(null, "Sem tarefas simples.");
 
     }
 
-    public static void exibirAlertaTarefaCriadaComSucesso() {
+    public void exibirAlertaTarefaCriadaComSucesso() {
         JOptionPane.showMessageDialog(null, "Tarefa criada com sucesso!");
 
     }
 
-    public static void exibirAlertaTarefaModificadaComSucesso() {
+    public void exibirAlertaTarefaModificadaComSucesso() {
         JOptionPane.showMessageDialog(null, "Tarefa modificada com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
     }
 
-    public static void exibirAlertaSemTarefasComPrazo() {
+    public void exibirAlertaSemTarefasComPrazo() {
         JOptionPane.showMessageDialog(null, "Sem tarefas com prazo.");
 
     }
 
-    public static void exibirAlertaTarefaExecutadaComSucesso() {
+    public void exibirAlertaTarefaExecutadaComSucesso() {
         JOptionPane.showMessageDialog(null, "Tarefa executada com sucesso!");
 
     }
 
-    public static void exibirAlertaSemTarefasDoTipoNoProjeto() {
+    public void exibirAlertaSemTarefasDoTipoNoProjeto() {
         JOptionPane.showMessageDialog(null, "Sem tarefas desse tipo no projeto.");
 
     }
 
-    public static void exibirAlertaTarefaDeletadaComSucesso() {
+    public void exibirAlertaTarefaDeletadaComSucesso() {
         JOptionPane.showMessageDialog(null, "Tarefa deletada com sucesso!");
 
     }
 
-    public static void exibirAlertaQueNaoPodeTarefaComNomeDuplicadoEmUmProjeto() {
+    public void exibirAlertaQueNaoPodeTarefaComNomeDuplicadoEmUmProjeto() {
         JOptionPane.showMessageDialog(null, "Nao pode ter mais de uma tarefa com o mesmo titulo em um projeto");
 
     }
 
-    public static void exibirAlertaTituloTarefaNaoPodeSerVazio() {
+    public void exibirAlertaTituloTarefaNaoPodeSerVazio() {
         JOptionPane.showMessageDialog(null, "O título não pode ser vazio.", "Alerta", JOptionPane.ERROR_MESSAGE);
 
     }
 
-    public static void exibirAlertaDescricaoTarefaNaoPoderSerVazia() {
+    public void exibirAlertaDescricaoTarefaNaoPoderSerVazia() {
         JOptionPane.showMessageDialog(null, "A descricao nao pode ser vazia.", "Alerta", JOptionPane.ERROR_MESSAGE);
 
     }
 
 
-    public static String leTituloTarefa() {
+    public String leTituloTarefa() {
         return JOptionPane.showInputDialog("Digite o titulo: ");
     }
 
-    public static String leDescricaoTarefa() {
+    public String leDescricaoTarefa() {
         return JOptionPane.showInputDialog("Digite a descricao: ");
     }
 
-    public static void exibeTarefa(Tarefa tarefa) {
+    public void exibeTarefa(Tarefa tarefa) {
         JOptionPane.showMessageDialog(null, tarefa);
 
     }
-
 
 
 }

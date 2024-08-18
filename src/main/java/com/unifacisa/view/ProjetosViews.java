@@ -1,19 +1,18 @@
 package com.unifacisa.view;
 
-import com.unifacisa.exceptions.GlobalExceptionHandler;
 import com.unifacisa.model.domain.entities.Projeto;
 
-import javax.swing.JOptionPane;
+import javax.swing.*;
 
 public class ProjetosViews {
-
-    private ProjetosViews() {
-    }
 
     private static final String MENU_TITLE = "Gerenciador de Projeto";
     private static final String MENU_PROMPT = "Escolha uma opcao: ";
 
-    private static final Object[] MENU_OPTIONS = {
+    public ProjetosViews() {
+    }
+
+    private final Object[] menuOptions = {
             "Criar Projeto",
             "Atualizar Projeto",
             "Visualizar Projeto(s)",
@@ -23,42 +22,22 @@ public class ProjetosViews {
             "Voltar"
     };
 
-    public static String exibirMenuProjetosView() {
+    public String exibirMenuProjetosView() {
         Object opcaoSelecionada = JOptionPane.showInputDialog(
                 null,
                 MENU_PROMPT,
                 MENU_TITLE,
                 JOptionPane.INFORMATION_MESSAGE,
                 null,
-                MENU_OPTIONS,
-                MENU_OPTIONS[0]
+                menuOptions,
+                menuOptions[0]
         );
 
         return opcaoSelecionada.toString();
     }
 
 
-    public static String exibirProjetosDTOsView(Object[] options) {
-        Object opcaoSelecionada = JOptionPane.showInputDialog(
-                null,
-                "Escolha um projeto: ",
-                "Projetos",
-                JOptionPane.INFORMATION_MESSAGE,
-                null,
-                options,
-                options[0]
-        );
-
-        if (opcaoSelecionada != null) {
-            return opcaoSelecionada.toString();
-        } else {
-            GlobalExceptionHandler.handleGeneralException("Nenhum projeto foi selecionado.");
-            return null;
-        }
-    }
-
-
-    public static int selecionaOpcaoDeModificacaoProjeto() {
+    public int selecionaOpcaoDeModificacaoProjeto() {
 
         Object[] opcoes = {"Titulo", "Descricao", "Todos", "Voltar"};
 
@@ -68,66 +47,65 @@ public class ProjetosViews {
 
     }
 
-    public static void exibeDadosProjetos(Projeto projeto){
+    public void exibeDadosProjetos(Projeto projeto) {
         JOptionPane.showMessageDialog(null, projeto.toString());
 
     }
 
 
-    public static String leTituloProjeto(){
+    public String leTituloProjeto() {
         return JOptionPane.showInputDialog("Digite o titulo do projeto: ");
     }
 
-    public static String leDescricaoProjeto(){
+    public String leDescricaoProjeto() {
         return JOptionPane.showInputDialog("Digite uma descricao: ");
     }
 
-    public static void exibirAlertaSemProjetosCorrespondentes(){
+    public void exibirAlertaSemProjetosCorrespondentes() {
         JOptionPane.showMessageDialog(null, "Sem projeto(s) correspondentes.", "Alerta"
                 , JOptionPane.ERROR_MESSAGE);
     }
 
-    public static void exibirAlertaProjetoRemovidoComSucesso(){
+    public void exibirAlertaProjetoRemovidoComSucesso() {
         JOptionPane.showMessageDialog(null, "Projeto removido com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
     }
 
-    public static void exibirAlertaProjetoComMesmoTitulo(){
+    public void exibirAlertaProjetoComMesmoTitulo() {
         JOptionPane.showMessageDialog(null, "Projeto com o mesmo titulo ja existe. Tente com um outro titulo.", "Alerta", JOptionPane.ERROR_MESSAGE);
 
     }
 
 
-
-    public static void exibirAlertaProjetoExecutadoComSucesso(){
+    public void exibirAlertaProjetoExecutadoComSucesso() {
         JOptionPane.showMessageDialog(null, "Projeto executada com sucesso!");
 
     }
 
-    public static void exibirAlertaTituloNaoPodeSerVazio(){
+    public void exibirAlertaTituloNaoPodeSerVazio() {
         JOptionPane.showMessageDialog(null, "O título não pode ser vazio.", "Alerta", JOptionPane.ERROR_MESSAGE);
 
     }
 
-    public static void exibirAlertaDescricaoNaoPodeSerVazia(){
+    public void exibirAlertaDescricaoNaoPodeSerVazia() {
         JOptionPane.showMessageDialog(null, "A descricao nao pode ser vazia.", "Alerta", JOptionPane.ERROR_MESSAGE);
 
     }
 
-    public static void exibirAlertaSemProjeto() {
+    public void exibirAlertaSemProjeto() {
         JOptionPane.showMessageDialog(null, "Sem projeto(s). Adicione primeiro.", "Alerta", JOptionPane.ERROR_MESSAGE);
     }
 
-    public static void exibirAlertaProjetoModificadoComSucesso() {
+    public void exibirAlertaProjetoModificadoComSucesso() {
         JOptionPane.showMessageDialog(null, "Projeto modificado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
     }
 
-    public static void exibirAlertaProjetoFoiCriadoComSucesso(){
+    public void exibirAlertaProjetoFoiCriadoComSucesso() {
         JOptionPane.showMessageDialog(null, "Projeto criado com sucesso!", "Sucesso", JOptionPane.INFORMATION_MESSAGE);
 
     }
 
-    public static void atualizarTitulo(Projeto projeto) {
+    public void atualizarTitulo(Projeto projeto) {
         String novoTitulo;
         while (true) {
             novoTitulo = JOptionPane.showInputDialog("Digite o novo titulo: ");
@@ -139,7 +117,7 @@ public class ProjetosViews {
         }
     }
 
-    public static void atualizarDescricao(Projeto projeto) {
+    public void atualizarDescricao(Projeto projeto) {
         String novaDescricao;
         while (true) {
             novaDescricao = JOptionPane.showInputDialog("Digite a nova descricao: ");
@@ -150,7 +128,6 @@ public class ProjetosViews {
             JOptionPane.showMessageDialog(null, "A descricao nao pode ser vazia. Digite uma nova descricao!", "Alerta", JOptionPane.ERROR_MESSAGE);
         }
     }
-
 
 
 }

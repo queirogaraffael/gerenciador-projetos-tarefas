@@ -1,5 +1,7 @@
 
 
-java:S1192["HDefine a constant instead of duplicating this literal "Sucesso" 3 times.(î©äÿÿÿÿÿ8¨Œ®³–2J$3c70e0cb-9d0a-49ff-8b02-39f44611cc92
+java:S1192F"HDefine a constant instead of duplicating this literal "Sucesso" 3 times.(î©äÿÿÿÿÿ8¨Œ®³–2J$71b09560-b4f0-429f-ba0d-844e8a1fa55b
 Š
-java:S1192V"GDefine a constant instead of duplicating this literal "Alerta" 7 times.(ÌÏá±8¨Œ®³–2J$e5616b38-4fd6-404f-8abf-8c2fbe79241c
+java:S1192A"GDefine a constant instead of duplicating this literal "Alerta" 7 times.(ÌÏá±8¨Œ®³–2J$516b0563-5bbe-4fb5-a28e-9f4651a92d70
+Ä
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(àê¦¸8ª¨èº–2J$c972d99d-cdfd-4e16-9262-b64bfb251164

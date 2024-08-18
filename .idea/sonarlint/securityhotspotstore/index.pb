@@ -51,3 +51,13 @@ c
 3src/main/java/com/unifacisa/view/ProjetosViews.java,4\d\4ddbfdd2c1f39fbade368543623bbd8a532f2615
 h
 8src/main/java/com/unifacisa/view/MenuPrincipalViews.java,b\3\b3ff2c7d9a7ffdf72c9c35af8745aee07f21b76d
+n
+>src/main/java/com/unifacisa/model/domain/entities/Projeto.java,b\7\b79bfcfa45e876e76ad27ce9c600ba7ddbd4097d
+m
+=src/main/java/com/unifacisa/model/domain/entities/Tarefa.java,4\4\44a87e2f73e1861f2b2bb01cc81f8b268002c376
+u
+Esrc/main/java/com/unifacisa/model/domain/entities/TarefaComPrazo.java,f\d\fd2b7f05a12159d076ba82bd57427e897864f863
+t
+Dsrc/main/java/com/unifacisa/model/domain/entities/TarefaSimples.java,5\a\5abccb453c4f4866dc9ccbf71903f1e9a91600c8
+h
+8src/main/java/com/unifacisa/view/SelecionaDTOsViews.java,d\3\d3b297c9f18ec24ec8e69ebc7263b354c966dd18

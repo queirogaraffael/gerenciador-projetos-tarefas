@@ -23,9 +23,9 @@ public class TarefaSimples extends Tarefa {
     @Override
     public String toString() {
         return "Tarefa: \n" +
-                "Título: " + getTitulo() +
-                "\n Descrição: " + getDescricao() +
-                "\n Em Aberto: " + (isEmAberto() ? "Sim" : "Nao");
+                "Titulo: " + getTitulo() +
+                "\n Descricao: " + getDescricao() +
+                "\n Em aberto: " + (isEmAberto() ? "Sim" : "Nao");
     }
 
 }

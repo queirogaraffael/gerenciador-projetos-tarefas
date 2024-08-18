@@ -3,9 +3,9 @@ package com.unifacisa.commons.utils;
 import com.unifacisa.dtos.ProjetoDTO;
 import com.unifacisa.dtos.TarefaDTO;
 import com.unifacisa.exceptions.GlobalExceptionHandler;
-import com.unifacisa.view.ProjetosViews;
-import com.unifacisa.view.TarefasViews;
+import com.unifacisa.view.SelecionaDTOsViews;
 
+import javax.swing.*;
 import java.util.List;
 
 public class SelecionaDTO {
@@ -15,7 +15,7 @@ public class SelecionaDTO {
 
     public static Long selecionaProjetoDTO(List<ProjetoDTO> projetos) {
         Object[] opcoes = converterProjetosParaArray(projetos);
-        String projetoSelecionado = ProjetosViews.exibirProjetosDTOsView(opcoes);
+        String projetoSelecionado = SelecionaDTOsViews.exibirProjetosDTOsView(opcoes);
 
 
         ProjetoDTO projeto = buscarProjetoPorTitulo(projetos, projetoSelecionado);
@@ -31,7 +31,7 @@ public class SelecionaDTO {
 
     public static Long selecionaTarefaDTO(List<TarefaDTO> tarefas) {
         Object[] opcoesTarefas = converterTarefasParaArray(tarefas);
-        String tarefaSelecionado = TarefasViews.exibirTarefasDTOsView(opcoesTarefas);
+        String tarefaSelecionado = SelecionaDTOsViews.exibirTarefasDTOsView(opcoesTarefas);
 
 
         TarefaDTO tarefa = buscarTarefaPorTitulo(tarefas, tarefaSelecionado);

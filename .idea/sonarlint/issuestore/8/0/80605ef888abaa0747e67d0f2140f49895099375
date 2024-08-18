@@ -1,5 +1,7 @@
 
 
-java:S1192"GDefine a constant instead of duplicating this literal "Voltar" 3 times.(µ¦°»ùÿÿÿÿ8ÎïË·–2J$7adca529-3350-462c-a19c-d780ba4adab5
+java:S1192"GDefine a constant instead of duplicating this literal "Voltar" 3 times.(ŸÀ»ÿÿÿÿÿ8…¼›»–2J$e2f4de5e-f328-4723-9b3c-ac76270c1421
 
-java:S11926"GDefine a constant instead of duplicating this literal "Alerta" 8 times.(äº›Ãşÿÿÿÿ8ÎïË·–2J$9eeb7a4a-29b3-421f-8ab2-4ca985ed5a92
+java:S11925"GDefine a constant instead of duplicating this literal "Alerta" 8 times.(äº›Ãşÿÿÿÿ8ºıáº–2J$546ae6c5-7c62-40f7-90f6-f0de1666a71d
+Ã
+java:S1186"€Add a nested comment explaining why this method is empty, throw an UnsupportedOperationException or complete the implementation.(¨şÃP8ºıáº–2J$0ca04219-7654-427f-8a19-ee3c23bc3bbc

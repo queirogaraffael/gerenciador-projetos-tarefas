@@ -1,7 +1,7 @@
 package com.unifacisa.controllers;
 
 
-import com.unifacisa.commons.constantes.ConstantesMenuPrincipalController;
+import com.unifacisa.constantes.ConstantesMenuPrincipalController;
 import com.unifacisa.hibernate_connection.EntityManagerFactoryService;
 import com.unifacisa.view.MenuPrincipalViews;
 

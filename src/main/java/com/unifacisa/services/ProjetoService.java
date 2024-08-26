@@ -55,8 +55,8 @@ public class ProjetoService {
     }
 
 
-    public boolean verificaSeHaProjetoComMesmoTitulo(String titulo) {
-        return projetoDao.verificaSeHaProjetoComMesmoTitulo(titulo);
+    public boolean haProjetoComMesmoTitulo(String titulo) {
+        return projetoDao.haProjetoComMesmoTitulo(titulo);
     }
 
 

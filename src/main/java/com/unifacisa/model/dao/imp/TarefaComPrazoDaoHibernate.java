@@ -1,9 +1,9 @@
 package com.unifacisa.model.dao.imp;
 
 import com.unifacisa.dtos.TarefaDTO;
+import com.unifacisa.enums.Prioridade;
 import com.unifacisa.exceptions.GlobalExceptionHandler;
 import com.unifacisa.model.dao.TarefaComPrazoDao;
-import com.unifacisa.enums.Prioridade;
 import com.unifacisa.model.domain.entities.TarefaComPrazo;
 
 import javax.persistence.*;
@@ -29,17 +29,17 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
             entityManager.persist(tarefa);
             transaction.commit();
 
-        } catch (PersistenceException error) {
+        } catch (PersistenceException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            GlobalExceptionHandler.handlePersistenceException(error);
+            GlobalExceptionHandler.handlePersistenceException(e);
 
-        } catch (Exception error) {
+        } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            GlobalExceptionHandler.handleGeneralException(error);
+            GlobalExceptionHandler.handleGeneralException(e);
 
         } finally {
             entityManager.close();
@@ -52,10 +52,13 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            return entityManager.createQuery("SELECT tarefa FROM TarefaComPrazo tarefa WHERE tarefa.id =: id", TarefaComPrazo.class).setParameter("id", id).getSingleResult();
+            String jpql = "SELECT t " +
+                    "FROM TarefaComPrazo t " +
+                    "WHERE t.id =: id";
+
+            return entityManager.createQuery(jpql, TarefaComPrazo.class).setParameter("id", id).getSingleResult();
 
         } catch (NoResultException error) {
-            GlobalExceptionHandler.handleNoResultException(error);
             return null;
         } catch (Exception error) {
             GlobalExceptionHandler.handleGeneralException(error);
@@ -66,17 +69,24 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
     }
 
     @Override
-    public boolean verificaSeHaTarefaComMesmoTitulo(String titulo) {
+    public boolean haTarefaComMesmoTitulo(String titulo) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            entityManager.createQuery("SELECT tarefa FROM TarefaComPrazo tarefa WHERE LOWER(tarefa.titulo) = LOWER(:titulo)", TarefaComPrazo.class)
+            String jpql = "SELECT t " +
+                    "FROM TarefaComPrazo t " +
+                    "WHERE LOWER(t.titulo) = LOWER(:titulo)";
+
+            entityManager.createQuery(jpql, TarefaComPrazo.class)
                     .setParameter("titulo", titulo.trim())
                     .getSingleResult();
 
             return true;
 
-        } catch (Exception error) {
+        } catch (NoResultException e) {
+            return false;
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleGeneralException(e);
             return false;
         } finally {
             entityManager.close();
@@ -89,17 +99,19 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
+            String jpql = "SELECT new com.unifacisa.dtos.TarefaDTO(t.id, t.titulo) " +
+                    "FROM TarefaComPrazo t " +
+                    "WHERE t.projeto.id = :idProjeto";
+
             return entityManager.createQuery(
-                            "SELECT new com.unifacisa.dtos.TarefaDTO(tarefa.id, tarefa.titulo) " +
-                                    "FROM TarefaComPrazo tarefa " +
-                                    "WHERE tarefa.projeto.id = :idProjeto",
+                            jpql,
                             TarefaDTO.class)
                     .setParameter("idProjeto", idProjeto)
                     .getResultList();
 
 
-        } catch (Exception error) {
-            GlobalExceptionHandler.handleGeneralException(error);
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleGeneralException(e);
             return Collections.emptyList();
         } finally {
             entityManager.close();
@@ -112,16 +124,19 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
+            String jpql = "SELECT new com.unifacisa.dtos.TarefaDTO(t.id, t.titulo) " +
+                    "FROM TarefaComPrazo t " +
+                    "WHERE t.prioridade = :prioridade AND t.projeto.id = :idProjeto";
+
             return entityManager.createQuery(
-                            "SELECT new com.unifacisa.dtos.TarefaDTO(tarefa.id, tarefa.titulo) " +
-                                    "FROM TarefaComPrazo tarefa " +
-                                    "WHERE tarefa.prioridade = :prioridade AND tarefa.projeto.id = :idProjeto",
+                            jpql,
                             TarefaDTO.class)
                     .setParameter("prioridade", prioridade)
                     .setParameter("idProjeto", idProjeto)
                     .getResultList();
-        } catch (Exception error) {
-            GlobalExceptionHandler.handleGeneralException(error);
+
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleGeneralException(e);
             return Collections.emptyList();
         } finally {
             entityManager.close();
@@ -129,23 +144,27 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
     }
 
 
-
     @Override
     public List<TarefaDTO> getTarefasDTOByStatus(boolean emAberto, Long idProjeto) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
+
+            String jpql = "SELECT new com.unifacisa.dtos.TarefaDTO(t.id, t.titulo) " +
+                    "FROM TarefaComPrazo t " +
+                    "WHERE t.emAberto = :emAberto AND t.projeto.id = :idProjeto";
+
             return entityManager.createQuery(
-                            "SELECT new com.unifacisa.dtos.TarefaDTO(tarefa.id, tarefa.titulo) " +
-                                    "FROM TarefaComPrazo tarefa " +
-                                    "WHERE tarefa.emAberto = :emAberto AND tarefa.projeto.id = :idProjeto",
+                            jpql,
                             TarefaDTO.class)
                     .setParameter("emAberto", emAberto)
                     .setParameter("idProjeto", idProjeto)
                     .getResultList();
-        } catch (Exception error) {
-            GlobalExceptionHandler.handleGeneralException(error);
+
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleGeneralException(e);
             return Collections.emptyList();
+
         } finally {
             entityManager.close();
         }
@@ -154,32 +173,29 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
 
     @Override
     public void atualizaTarefa(TarefaComPrazo tarefaModifica) {
-        if (tarefaModifica == null || tarefaModifica.getId() == null) {
-            GlobalExceptionHandler.handleIllegalArgumentException("Tarefa ou ID inválido.");
-            return;
-        }
-
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
             transaction.begin();
 
-            TarefaComPrazo tarefaExistente = entityManager.find(TarefaComPrazo.class, tarefaModifica.getId());
+            String jpql = "SELECT t " +
+                    "FROM TarefaComPrazo t " +
+                    "WHERE t.id =: id";
 
-            if (tarefaExistente != null) {
+            TarefaComPrazo tarefaExistente = entityManager.createQuery(jpql, TarefaComPrazo.class).setParameter("id", tarefaModifica.getId()).getSingleResult();
 
-                tarefaExistente.setTitulo(tarefaModifica.getTitulo());
-                tarefaExistente.setDescricao(tarefaModifica.getDescricao());
-                tarefaExistente.setPrioridade(tarefaModifica.getPrioridade());
-                tarefaExistente.setEmAberto(tarefaModifica.isEmAberto());
-                tarefaExistente.setPrazo(tarefaModifica.getPrazo());
+            tarefaExistente.setTitulo(tarefaModifica.getTitulo());
+            tarefaExistente.setDescricao(tarefaModifica.getDescricao());
+            tarefaExistente.setPrioridade(tarefaModifica.getPrioridade());
+            tarefaExistente.setEmAberto(tarefaModifica.isEmAberto());
+            tarefaExistente.setPrazo(tarefaModifica.getPrazo());
 
-                transaction.commit();
-            } else {
-                GlobalExceptionHandler.handleRuntimeException("Tarefa nao encontrado para atualizacao.");
-            }
+            entityManager.merge(tarefaExistente);
+            transaction.commit();
 
+        } catch (NoResultException e) {
+            GlobalExceptionHandler.handleNoResultException("Entidade nao encontrada para modificacao." + e.getMessage());
         } catch (PersistenceException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -206,18 +222,23 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
         try {
             transaction.begin();
 
-            TarefaComPrazo tarefaComPrazo = entityManager.find(TarefaComPrazo.class, id);
+            String jpql = "SELECT t " +
+                    "FROM TarefaComPrazo t " +
+                    "WHERE t.id =: id";
 
-            if (tarefaComPrazo != null) {
-                entityManager.remove(tarefaComPrazo);
-                transaction.commit();
-            }
+            TarefaComPrazo tarefaComPrazo = entityManager.createQuery(jpql, TarefaComPrazo.class).setParameter("id", id).getSingleResult();
 
-        } catch (Exception error) {
+
+            entityManager.remove(tarefaComPrazo);
+            transaction.commit();
+
+        } catch (NoResultException e) {
+            GlobalExceptionHandler.handleNoResultException("Entidade nao encontrada para delecao." + e.getMessage());
+        } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            GlobalExceptionHandler.handleGeneralException(error);
+            GlobalExceptionHandler.handleGeneralException(e);
         } finally {
             entityManager.close();
         }
@@ -231,22 +252,25 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
 
         try {
             transaction.begin();
-            TarefaComPrazo tarefaComPrazo = entityManager.createQuery("SELECT tarefa FROM TarefaComPrazo tarefa WHERE tarefa.id =: id", TarefaComPrazo.class).setParameter("id", id).getSingleResult();
 
-            tarefaComPrazo.setEmAberto(false);
+            String jpql = "SELECT t " +
+                    "FROM TarefaComPrazo t " +
+                    "WHERE t.id =: id";
+
+            TarefaComPrazo tarefa = entityManager.createQuery(jpql, TarefaComPrazo.class).setParameter("id", id).getSingleResult();
+
+            tarefa.setEmAberto(false);
+
+            entityManager.merge(tarefa);
             transaction.commit();
 
-        } catch (NoResultException error) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            GlobalExceptionHandler.handleNoResultException(error);
+        } catch (NoResultException e) {
+            GlobalExceptionHandler.handleNoResultException("Problema ao busca entidade para execucao. " + e.getMessage());
         } catch (PersistenceException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
             GlobalExceptionHandler.handlePersistenceException(e);
-
         } catch (Exception error) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -265,16 +289,21 @@ public class TarefaComPrazoDaoHibernate implements TarefaComPrazoDao {
         try {
             transaction.begin();
 
-            entityManager.createQuery(
-                            "UPDATE TarefaComPrazo tarefa SET tarefa.emAberto = false WHERE tarefa.projeto.id = :idProjeto")
+            String jpql = "UPDATE TarefaComPrazo t " +
+                    "SET t.emAberto = false " +
+                    "WHERE t.projeto.id = :idProjeto";
+
+            entityManager.flush();
+            entityManager.createQuery(jpql)
                     .setParameter("idProjeto", idProjeto)
                     .executeUpdate();
 
             transaction.commit();
 
         } catch (Exception e) {
-            transaction.rollback();
-
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
             GlobalExceptionHandler.handleGeneralException(e);
         } finally {
             entityManager.close();

@@ -28,17 +28,17 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
             entityManager.persist(tarefa);
             transaction.commit();
 
-        } catch (PersistenceException error) {
+        } catch (PersistenceException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            GlobalExceptionHandler.handlePersistenceException(error);
+            GlobalExceptionHandler.handlePersistenceException(e);
 
-        } catch (Exception error) {
+        } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            GlobalExceptionHandler.handleGeneralException(error);
+            GlobalExceptionHandler.handleGeneralException(e);
 
         } finally {
             entityManager.close();
@@ -50,13 +50,16 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            return entityManager.createQuery("SELECT tarefa FROM TarefaSimples tarefa WHERE tarefa.id =: id", TarefaSimples.class).setParameter("id", id).getSingleResult();
+            String jpql = "SELECT t " +
+                    "FROM TarefaSimples t " +
+                    "WHERE t.id =: id";
 
-        } catch (NoResultException error) {
-            GlobalExceptionHandler.handleNoResultException(error);
+            return entityManager.createQuery(jpql, TarefaSimples.class).setParameter("id", id).getSingleResult();
+
+        } catch (NoResultException e) {
             return null;
-        } catch (Exception error) {
-            GlobalExceptionHandler.handleGeneralException(error);
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleGeneralException(e);
             return null;
         } finally {
             entityManager.close();
@@ -68,13 +71,20 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            entityManager.createQuery("SELECT tarefa FROM TarefaSimples tarefa WHERE LOWER(tarefa.titulo) = LOWER(:titulo)", TarefaSimples.class)
+            String jpql = "SELECT t " +
+                    "FROM TarefaSimples t " +
+                    "WHERE LOWER(t.titulo) = LOWER(:titulo)";
+
+            entityManager.createQuery(jpql, TarefaSimples.class)
                     .setParameter("titulo", titulo.trim())
                     .getSingleResult();
 
             return true;
 
-        } catch (Exception error) {
+        } catch (NoResultException e) {
+            return false;
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleGeneralException(e);
             return false;
         } finally {
             entityManager.close();
@@ -88,17 +98,18 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
+            String jpql = "SELECT new com.unifacisa.dtos.TarefaDTO(t.id, t.titulo) " +
+                    "FROM TarefaSimples t " +
+                    "WHERE t.projeto.id = :idProjeto";
+
             return entityManager.createQuery(
-                            "SELECT new com.unifacisa.dtos.TarefaDTO(tarefa.id, tarefa.titulo) " +
-                                    "FROM TarefaSimples tarefa " +
-                                    "WHERE tarefa.projeto.id = :idProjeto",
+                            jpql,
                             TarefaDTO.class)
                     .setParameter("idProjeto", idProjeto)
                     .getResultList();
 
-
-        } catch (Exception error) {
-            GlobalExceptionHandler.handleGeneralException(error);
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleGeneralException(e);
             return Collections.emptyList();
         } finally {
             entityManager.close();
@@ -111,16 +122,19 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
+
+            String jpql = "SELECT new com.unifacisa.dtos.TarefaDTO(t.id, t.titulo) " +
+                    "FROM TarefaSimples t " +
+                    "WHERE t.prioridade = :prioridade AND t.projeto.id = :idProjeto";
+
             return entityManager.createQuery(
-                            "SELECT new com.unifacisa.dtos.TarefaDTO(tarefa.id, tarefa.titulo) " +
-                                    "FROM TarefaSimples tarefa " +
-                                    "WHERE tarefa.prioridade = :prioridade AND tarefa.projeto.id = :idProjeto",
+                            jpql,
                             TarefaDTO.class)
                     .setParameter("prioridade", prioridade)
                     .setParameter("idProjeto", idProjeto)
                     .getResultList();
-        } catch (Exception error) {
-            GlobalExceptionHandler.handleGeneralException(error);
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleGeneralException(e);
             return Collections.emptyList();
         } finally {
             entityManager.close();
@@ -128,23 +142,24 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
     }
 
 
-
     @Override
     public List<TarefaDTO> getTarefasDTOByStatus(boolean emAberto, Long idProjeto) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
+            String jpql = "SELECT new com.unifacisa.dtos.TarefaDTO(t.id, t.titulo) " +
+                    "FROM TarefaSimples t " +
+                    "WHERE t.emAberto = :emAberto AND t.projeto.id = :idProjeto";
+
             return entityManager.createQuery(
-                            "SELECT new com.unifacisa.dtos.TarefaDTO(tarefa.id, tarefa.titulo) " +
-                                    "FROM TarefaSimples tarefa " +
-                                    "WHERE tarefa.emAberto = :emAberto AND tarefa.projeto.id = :idProjeto",
+                            jpql,
                             TarefaDTO.class)
                     .setParameter("emAberto", emAberto)
                     .setParameter("idProjeto", idProjeto)
                     .getResultList();
 
-        } catch (Exception error) {
-            GlobalExceptionHandler.handleGeneralException(error);
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleGeneralException(e);
             return Collections.emptyList();
         } finally {
             entityManager.close();
@@ -154,31 +169,28 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
 
     @Override
     public void atualizaTarefa(TarefaSimples tarefaModifica) {
-        if (tarefaModifica == null || tarefaModifica.getId() == null) {
-            GlobalExceptionHandler.handleIllegalArgumentException("Tarefa ou ID invalido.");
-            return;
-        }
-
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
             transaction.begin();
 
-            TarefaSimples tarefaExistente = entityManager.find(TarefaSimples.class, tarefaModifica.getId());
+            String jpql = "SELECT t " +
+                    "FROM TarefaSimples t " +
+                    "WHERE t.id =: id";
 
-            if (tarefaExistente != null) {
+            TarefaSimples tarefaExistente = entityManager.createQuery(jpql, TarefaSimples.class).setParameter("id", tarefaModifica.getId()).getSingleResult();
 
-                tarefaExistente.setTitulo(tarefaModifica.getTitulo());
-                tarefaExistente.setDescricao(tarefaModifica.getDescricao());
-                tarefaExistente.setPrioridade(tarefaModifica.getPrioridade());
-                tarefaExistente.setEmAberto(tarefaModifica.isEmAberto());
+            tarefaExistente.setTitulo(tarefaModifica.getTitulo());
+            tarefaExistente.setDescricao(tarefaModifica.getDescricao());
+            tarefaExistente.setPrioridade(tarefaModifica.getPrioridade());
+            tarefaExistente.setEmAberto(tarefaModifica.isEmAberto());
 
-                transaction.commit();
-            } else {
-                GlobalExceptionHandler.handleRuntimeException("Tarefa nao encontrada para atualizacao.");
-            }
+            entityManager.merge(tarefaExistente);
+            transaction.commit();
 
+        } catch (NoResultException e) {
+            GlobalExceptionHandler.handleNoResultException("Tarefa nao encontrada para modificacao.");
         } catch (PersistenceException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -204,13 +216,17 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
         try {
             transaction.begin();
 
-            TarefaSimples tarefaSimples = entityManager.find(TarefaSimples.class, id);
+            String jpql = "SELECT t " +
+                    "FROM TarefaSimples t " +
+                    "WHERE t.id =: id";
 
-            if (tarefaSimples != null) {
-                entityManager.remove(tarefaSimples);
-                transaction.commit();
-            }
+            TarefaSimples tarefaSimples = entityManager.createQuery(jpql, TarefaSimples.class).setParameter("id", id).getSingleResult();
 
+            entityManager.remove(tarefaSimples);
+            transaction.commit();
+
+        } catch (NoResultException e) {
+            GlobalExceptionHandler.handleNoResultException("Tarefa nao encontrada para delecao.");
         } catch (Exception error) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -228,27 +244,31 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
 
         try {
             transaction.begin();
-            TarefaSimples tarefaSimples = entityManager.createQuery("SELECT tarefa FROM TarefaSimples tarefa WHERE tarefa.id =: id", TarefaSimples.class).setParameter("id", id).getSingleResult();
+
+            String jpql = "SELECT t " +
+                    "FROM TarefaSimples t " +
+                    "WHERE t.id =: id";
+
+            TarefaSimples tarefaSimples = entityManager.createQuery(jpql, TarefaSimples.class).setParameter("id", id).getSingleResult();
 
             tarefaSimples.setEmAberto(false);
+
+            entityManager.merge(tarefaSimples);
             transaction.commit();
 
-        } catch (NoResultException error) {
-            if (transaction.isActive()) {
-                transaction.rollback();
-            }
-            GlobalExceptionHandler.handleNoResultException(error);
+        } catch (NoResultException er) {
+            GlobalExceptionHandler.handleNoResultException("Tarefa nao encontrada para execucao.");
         } catch (PersistenceException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
             GlobalExceptionHandler.handlePersistenceException(e);
 
-        } catch (Exception error) {
+        } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            GlobalExceptionHandler.handleGeneralException(error);
+            GlobalExceptionHandler.handleGeneralException(e);
         } finally {
             entityManager.close();
         }
@@ -262,8 +282,13 @@ public class TarefaSimplesDaoHibernate implements TarefaSimplesDao {
         try {
             transaction.begin();
 
+            String jpql = "UPDATE TarefaSimples t " +
+                    "SET t.emAberto = false " +
+                    "WHERE t.projeto.id = :idProjeto";
+
+            entityManager.flush();
             entityManager.createQuery(
-                            "UPDATE TarefaSimples tarefa SET tarefa.emAberto = false WHERE tarefa.projeto.id = :idProjeto")
+                            jpql)
                     .setParameter("idProjeto", idProjeto)
                     .executeUpdate();
 

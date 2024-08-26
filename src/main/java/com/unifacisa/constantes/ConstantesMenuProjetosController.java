@@ -1,4 +1,4 @@
-package com.unifacisa.commons.constantes;
+package com.unifacisa.constantes;
 
 public class ConstantesMenuProjetosController {
 

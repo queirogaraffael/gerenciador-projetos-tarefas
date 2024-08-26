@@ -1,7 +1,7 @@
 package com.unifacisa.model.dao.imp;
 
-import com.unifacisa.exceptions.GlobalExceptionHandler;
 import com.unifacisa.dtos.ProjetoDTO;
+import com.unifacisa.exceptions.GlobalExceptionHandler;
 import com.unifacisa.model.dao.ProjetoDao;
 import com.unifacisa.model.domain.entities.Projeto;
 
@@ -28,17 +28,17 @@ public class ProjetoDaoHibernate implements ProjetoDao {
             entityManager.persist(projeto);
             transaction.commit();
 
-        } catch (PersistenceException error) {
+        } catch (PersistenceException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            GlobalExceptionHandler.handlePersistenceException(error);
+            GlobalExceptionHandler.handlePersistenceException(e);
 
-        } catch (Exception error) {
+        } catch (Exception e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            GlobalExceptionHandler.handleGeneralException(error);
+            GlobalExceptionHandler.handleGeneralException(e);
 
         } finally {
             entityManager.close();
@@ -52,13 +52,16 @@ public class ProjetoDaoHibernate implements ProjetoDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            return entityManager.createQuery("SELECT projeto FROM Projeto projeto WHERE projeto.id =: idProjeto", Projeto.class).setParameter("idProjeto", idProjeto).getSingleResult();
+            String jpql = "SELECT p " +
+                    "FROM Projeto p " +
+                    "WHERE p.id =: idProjeto";
 
-        } catch (NoResultException error) {
-            GlobalExceptionHandler.handleNoResultException(error);
+            return entityManager.createQuery(jpql, Projeto.class).setParameter("idProjeto", idProjeto).getSingleResult();
+
+        } catch (NoResultException e) {
             return null;
-        } catch (Exception error) {
-            GlobalExceptionHandler.handleGeneralException(error);
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleGeneralException(e);
             return null;
         } finally {
             entityManager.close();
@@ -67,17 +70,24 @@ public class ProjetoDaoHibernate implements ProjetoDao {
 
 
     @Override
-    public boolean verificaSeHaProjetoComMesmoTitulo(String titulo) {
+    public boolean haProjetoComMesmoTitulo(String titulo) {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            entityManager.createQuery("SELECT projeto FROM Projeto projeto WHERE LOWER(projeto.titulo) = LOWER(:titulo)", Projeto.class)
+            String jpql = "SELECT p " +
+                    "FROM Projeto p " +
+                    "WHERE LOWER(p.titulo) = LOWER(:titulo)";
+
+            entityManager.createQuery(jpql, Projeto.class)
                     .setParameter("titulo", titulo.trim())
                     .getSingleResult();
 
             return true;
 
-        } catch (Exception error) {
+        } catch (NoResultException e) {
+            return false;
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleGeneralException(e);
             return false;
         } finally {
             entityManager.close();
@@ -90,12 +100,15 @@ public class ProjetoDaoHibernate implements ProjetoDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
+            String jpql = "SELECT new com.unifacisa.dtos.ProjetoDTO(p.id, p.titulo) " +
+                    "FROM Projeto p";
+
             return entityManager.createQuery(
-                    "SELECT new com.unifacisa.dtos.ProjetoDTO(projeto.id, projeto.titulo) FROM Projeto projeto",
+                    jpql,
                     ProjetoDTO.class).getResultList();
 
-        } catch (Exception error) {
-            GlobalExceptionHandler.handleGeneralException(error);
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleGeneralException("Problemas ao buscar projetos: " + e.getMessage());
             return Collections.emptyList();
         } finally {
             entityManager.close();
@@ -108,10 +121,14 @@ public class ProjetoDaoHibernate implements ProjetoDao {
         EntityManager entityManager = entityManagerFactory.createEntityManager();
 
         try {
-            return entityManager.createQuery("SELECT new com.unifacisa.dtos.ProjetoDTO(projeto.id, projeto.titulo) FROM Projeto projeto WHERE LOWER(projeto.titulo) LIKE LOWER(CONCAT('%', :titulo, '%'))", ProjetoDTO.class).setParameter("titulo", titulo).getResultList();
+            String jpql = "SELECT new com.unifacisa.dtos.ProjetoDTO(p.id, p.titulo) " +
+                    "FROM Projeto p " +
+                    "WHERE LOWER(p.titulo) LIKE LOWER(CONCAT('%', :titulo, '%'))";
 
-        } catch (Exception error) {
-            GlobalExceptionHandler.handleGeneralException("Sem projeto(s) com esse nome.");
+            return entityManager.createQuery(jpql, ProjetoDTO.class).setParameter("titulo", titulo).getResultList();
+
+        } catch (Exception e) {
+            GlobalExceptionHandler.handleGeneralException("Problemas ao buscar projetos: " + e.getMessage());
             return Collections.emptyList();
         } finally {
             entityManager.close();
@@ -122,28 +139,31 @@ public class ProjetoDaoHibernate implements ProjetoDao {
 
     @Override
     public void atualizaProjetoById(Projeto projetoModificado) {
-        if (projetoModificado == null || projetoModificado.getId() == null) {
-            GlobalExceptionHandler.handleIllegalArgumentException("Projeto ou ID invalido.");
-            return;
-        }
-
         EntityManager entityManager = entityManagerFactory.createEntityManager();
         EntityTransaction transaction = entityManager.getTransaction();
 
         try {
             transaction.begin();
 
-            Projeto projetoExistente = entityManager.find(Projeto.class, projetoModificado.getId());
-            if (projetoExistente != null) {
-                projetoExistente.setTitulo(projetoModificado.getTitulo());
-                projetoExistente.setDescricao(projetoModificado.getDescricao());
-                projetoExistente.setEmAberto(projetoModificado.isEmAberto());
+            String jpql = "SELECT p " +
+                    "FROM Projeto p " +
+                    "WHERE p.id =: idProjeto";
 
-                transaction.commit();
-            } else {
-                GlobalExceptionHandler.handleRuntimeException("Projeto não encontrado para atualizacao.");
+            Projeto projetoExistente = entityManager.createQuery(jpql, Projeto.class).setParameter("idProjeto", projetoModificado.getId()).getSingleResult();
+
+            projetoExistente.setTitulo(projetoModificado.getTitulo());
+            projetoExistente.setDescricao(projetoModificado.getDescricao());
+            projetoExistente.setEmAberto(projetoModificado.isEmAberto());
+
+            entityManager.merge(projetoExistente);
+
+            transaction.commit();
+
+        } catch (NoResultException e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
             }
-
+            GlobalExceptionHandler.handleGeneralException("Projeto nao encontrado para modificacao.");
         } catch (PersistenceException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
@@ -170,18 +190,25 @@ public class ProjetoDaoHibernate implements ProjetoDao {
         try {
             transaction.begin();
 
-            Projeto projeto = entityManager.find(Projeto.class, idProjeto);
+            String jpql = "SELECT p " +
+                    "FROM Projeto p " +
+                    "WHERE p.id =: idProjeto";
 
-            if (projeto != null) {
-                entityManager.remove(projeto);
-                transaction.commit();
-            }
+            Projeto projeto = entityManager.createQuery(jpql, Projeto.class).setParameter("idProjeto", idProjeto).getSingleResult();
 
-        } catch (Exception error) {
+            entityManager.remove(projeto);
+            transaction.commit();
+
+        } catch (NoResultException e) {
             if (transaction.isActive()) {
                 transaction.rollback();
             }
-            GlobalExceptionHandler.handleGeneralException(error);
+            GlobalExceptionHandler.handleGeneralException("Projeto nao encontrado para delecao.");
+        } catch (Exception e) {
+            if (transaction.isActive()) {
+                transaction.rollback();
+            }
+            GlobalExceptionHandler.handleGeneralException(e);
         } finally {
             entityManager.close();
         }

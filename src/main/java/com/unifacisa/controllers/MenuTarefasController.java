@@ -1,6 +1,6 @@
 package com.unifacisa.controllers;
 
-import com.unifacisa.commons.constantes.ConstantesMenuTarefasController;
+import com.unifacisa.constantes.ConstantesMenuTarefasController;
 import com.unifacisa.commons.utils.ManipulaData;
 import com.unifacisa.commons.utils.SelecionaDTO;
 import com.unifacisa.dtos.ProjetoDTO;
@@ -97,7 +97,7 @@ public class MenuTarefasController {
         String titulo = tarefasViews.leTituloTarefa();
 
 
-        if (tarefaComPrazoService.verificaSeHaTarefaComMesmoTitulo(titulo) || tarefaSimplesService.verificaSeHaTarefaComMesmoTitulo(titulo)) {
+        if (tarefaComPrazoService.haTarefaComMesmoTitulo(titulo) || tarefaSimplesService.verificaSeHaTarefaComMesmoTitulo(titulo)) {
             tarefasViews.exibirAlertaQueNaoPodeTarefaComNomeDuplicadoEmUmProjeto();
             return;
         }

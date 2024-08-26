@@ -11,7 +11,7 @@ public interface TarefaComPrazoDao {
 
     TarefaComPrazo getTarefaById(Long id);
 
-    boolean verificaSeHaTarefaComMesmoTitulo(String titulo);
+    boolean haTarefaComMesmoTitulo(String titulo);
 
     List<TarefaDTO> getTarefasDTODeUmProjeto(Long idProjeto);
 

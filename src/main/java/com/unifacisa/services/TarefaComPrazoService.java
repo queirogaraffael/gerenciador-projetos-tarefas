@@ -47,8 +47,8 @@ public class TarefaComPrazoService {
         tarefaComPrazoDao.executaTarefaById(id);
     }
 
-    public boolean verificaSeHaTarefaComMesmoTitulo(String titulo) {
-        return tarefaComPrazoDao.verificaSeHaTarefaComMesmoTitulo(titulo);
+    public boolean haTarefaComMesmoTitulo(String titulo) {
+        return tarefaComPrazoDao.haTarefaComMesmoTitulo(titulo);
     }
 
     public void executaTarefasPorProjeto(Long idProjeto){

@@ -1,6 +1,6 @@
 package com.unifacisa.controllers;
 
-import com.unifacisa.commons.constantes.ConstantesMenuProjetosController;
+import com.unifacisa.constantes.ConstantesMenuProjetosController;
 import com.unifacisa.commons.utils.SelecionaDTO;
 import com.unifacisa.dtos.ProjetoDTO;
 import com.unifacisa.model.domain.entities.Projeto;
@@ -77,7 +77,7 @@ public class MenuProjetosController {
             return;
         }
 
-        boolean verificaSeNomeJaExiste = projetoService.verificaSeHaProjetoComMesmoTitulo(titulo.trim());
+        boolean verificaSeNomeJaExiste = projetoService.haProjetoComMesmoTitulo(titulo.trim());
 
         if (verificaSeNomeJaExiste) {
             projetosViews.exibirAlertaProjetoComMesmoTitulo();

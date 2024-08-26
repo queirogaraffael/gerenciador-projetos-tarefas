@@ -1,16 +1,10 @@
 
 7
 pom.xml,4\4\442292b8a7efeabbe4cc176709b833b1792140ec
-…
-Usrc/main/java/com/unifacisa/commons/constantes/ConstantesMenuPrincipalController.java,1\3\1398f6105d619ccfcd23df2b4c2cde712b483578
 `
 0src/main/java/com/unifacisa/DTOs/ProjetoDTO.java,e\4\e4a70760156fbb5ee69face7ceaae46ef4be924f
 k
 ;src/main/java/com/unifacisa/commons/utils/ManipulaData.java,8\8\8832b99692d78555c94f9266c67c8cf9a8f6af96
-„
-Tsrc/main/java/com/unifacisa/commons/constantes/ConstantesMenuProjetosController.java,d\6\d6b8ba5ec6628b9af898799cea93173433d4166b
-ƒ
-Ssrc/main/java/com/unifacisa/commons/constantes/ConstantesMenuTarefasController.java,9\d\9d44071e4262bc2f28bef8d5d700dfa1b27559ee
 k
 ;src/main/java/com/unifacisa/commons/utils/SelecionaDTO.java,3\f\3f913e1294be1bb5e2173769d9751d06a7de1225
 t

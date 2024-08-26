@@ -10,7 +10,7 @@ public interface ProjetoDao {
 
     Projeto getProjetoById(Long idProjeto);
 
-    boolean verificaSeHaProjetoComMesmoTitulo(String nome);
+    boolean haProjetoComMesmoTitulo(String nome);
 
     List<ProjetoDTO> getProjetosDTO();
 
